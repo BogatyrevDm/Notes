@@ -1,24 +1,18 @@
 package com.example.notes;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.Format;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 public class NotesFragment extends Fragment {
 
@@ -64,24 +58,24 @@ public class NotesFragment extends Fragment {
     private Note createNewNote(int index) {
         Resources res = getResources();
         String stringDate = res.getStringArray(R.array.dates)[index];
-        DateFormat df = new SimpleDateFormat("yyyy/mm/dd");
-        Date date = new Date();
-        try {
-            date = df.parse(stringDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        DateFormat df = new SimpleDateFormat(getResources().getString(R.string.data_format));
+//        Date date = new Date();
+//        try {
+//            date = df.parse(stringDate);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
         int isImportantInt = Integer.parseInt(res.getStringArray(R.array.importances)[index]);
         Boolean isImportant = isImportantInt == 1;
         return new Note(res.getStringArray(R.array.names)[index],
-                res.getStringArray(R.array.descriptions)[index], date, isImportant, res.getStringArray(R.array.contents)[index]);
+                res.getStringArray(R.array.descriptions)[index], res.getStringArray(R.array.dates)[index], isImportant, res.getStringArray(R.array.contents)[index]);
     }
 
     private void showNote(Note currentNote) {
         if (isLandscape) {
-            showNotePort(currentNote);
-        } else {
             showNoteLand(currentNote);
+        } else {
+            showNotePort(currentNote);
         }
     }
 
@@ -90,7 +84,9 @@ public class NotesFragment extends Fragment {
     }
 
     private void showNotePort(Note currentNote) {
-
+        Intent intent = new Intent(getActivity(), SingleNoteActivity.class);
+        intent.putExtra(SingleNoteFragment.ARG_SINGLE_NOTE, currentNote);
+        startActivity(intent);
     }
 
     @Override
