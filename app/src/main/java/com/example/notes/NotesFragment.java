@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class NotesFragment extends Fragment {
 
@@ -36,6 +38,9 @@ public class NotesFragment extends Fragment {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
         } else {
             currentNote = createNewNote(0);
+        }
+        if (isLandscape){
+            showNoteLand(currentNote);
         }
     }
 
@@ -80,7 +85,12 @@ public class NotesFragment extends Fragment {
     }
 
     private void showNoteLand(Note currentNote) {
-
+        SingleNoteFragment detail = SingleNoteFragment.newInstance(currentNote);
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.single_note, detail);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.commit();
     }
 
     private void showNotePort(Note currentNote) {
