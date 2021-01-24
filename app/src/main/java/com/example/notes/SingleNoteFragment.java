@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class SingleNoteFragment extends Fragment {
 
     static final String ARG_SINGLE_NOTE = "note";
@@ -42,7 +46,10 @@ public class SingleNoteFragment extends Fragment {
         TextView tvName = view.findViewById(R.id.text_view_name);
         tvName.setText(note.getName());
         EditText etDate = view.findViewById(R.id.edit_text_date);
-        etDate.setText(note.getStringCreationDate());
+//        String pattern = getResources().getString(R.string.data_format);
+//        DateFormat df = new SimpleDateFormat(pattern);
+//        String todayAsString = df.format(note.getCreationDate());
+        etDate.setText(note.getCreationDate());
         TextView tvDescription = view.findViewById(R.id.text_view_description);
         tvDescription.setText(note.getDescription());
         TextView tvContent = view.findViewById(R.id.edit_text_content);
