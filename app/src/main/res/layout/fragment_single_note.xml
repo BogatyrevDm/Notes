@@ -12,16 +12,15 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/edit_text_date"
+        app:layout_constraintBottom_toBottomOf="@id/text_view_date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_text_date"
+    <TextView
+        android:id="@+id/text_view_date"
         android:hint="@string/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

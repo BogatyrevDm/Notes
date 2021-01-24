@@ -5,4 +5,6 @@
     <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="content">content</string>
+    <string name="date_format">%d/%d/%d</string>
+    <string name="date_separator">/</string>
 </resources>
