@@ -1,23 +1,19 @@
 package com.example.notes;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import androidx.fragment.app.Fragment;
 
 public class SingleNoteFragment extends Fragment {
 
     static final String ARG_SINGLE_NOTE = "note";
     private Note note;
+
     public SingleNoteFragment() {
         // Required empty public constructor
     }
@@ -54,6 +50,7 @@ public class SingleNoteFragment extends Fragment {
         tvDescription.setText(note.getDescription());
         TextView tvContent = view.findViewById(R.id.edit_text_content);
         tvContent.setText(note.getContent());
+
         return view;
     }
 }
