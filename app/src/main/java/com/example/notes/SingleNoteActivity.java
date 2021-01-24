@@ -11,9 +11,14 @@ public class SingleNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_note);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-           finish();
-           return;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            finish();
+            return;
+        }
+        if (savedInstanceState == null) {
+            SingleNoteFragment details = new SingleNoteFragment();
+            details.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, details).commit();
         }
     }
 }
