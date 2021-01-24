@@ -1,8 +1,11 @@
 package com.example.notes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
-class Note {
+class Note implements Parcelable {
     private String name; //Имя заметки
     private String description; //Описание
     private Date creationDate; //Дата создания
@@ -16,6 +19,28 @@ class Note {
         this.isImportant = isImportant;
         this.content = content;
     }
+    public Note(String name) {
+        this.name = name;
+    }
+
+    protected Note(Parcel in) {
+        name = in.readString();
+        description = in.readString();
+        isImportant = in.readByte() != 0;
+        content = in.readString();
+    }
+
+    public static final Creator<Note> CREATOR = new Creator<Note>() {
+        @Override
+        public Note createFromParcel(Parcel in) {
+            return new Note(in);
+        }
+
+        @Override
+        public Note[] newArray(int size) {
+            return new Note[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -55,5 +80,18 @@ class Note {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeByte((byte) (isImportant ? 1 : 0));
+        dest.writeString(content);
     }
 }
