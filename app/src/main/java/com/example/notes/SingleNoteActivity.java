@@ -2,6 +2,7 @@ package com.example.notes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 public class SingleNoteActivity extends AppCompatActivity {
@@ -10,5 +11,9 @@ public class SingleNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_note);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+           finish();
+           return;
+        }
     }
 }
