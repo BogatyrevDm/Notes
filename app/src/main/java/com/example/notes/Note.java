@@ -61,6 +61,9 @@ class Note implements Parcelable {
     public Date getCreationDate() {
         return creationDate;
     }
+    public String getStringCreationDate() {
+        return String.valueOf(getCreationDate());
+    }
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;

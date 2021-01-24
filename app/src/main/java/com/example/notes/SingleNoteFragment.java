@@ -7,41 +7,21 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SingleNoteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SingleNoteFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    static final String ARG_SINGLE_NOTE = "note";
+    private Note note;
     public SingleNoteFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SingleNoteFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SingleNoteFragment newInstance(String param1, String param2) {
+    public static SingleNoteFragment newInstance(Note note) {
         SingleNoteFragment fragment = new SingleNoteFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_SINGLE_NOTE, note);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,8 +30,7 @@ public class SingleNoteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            note = getArguments().getParcelable(ARG_SINGLE_NOTE);
         }
     }
 
@@ -59,6 +38,15 @@ public class SingleNoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_single_note, container, false);
+        View view = inflater.inflate(R.layout.fragment_single_note, container, false);
+        TextView tvName = view.findViewById(R.id.text_view_name);
+        tvName.setText(note.getName());
+        EditText etDate = view.findViewById(R.id.edit_text_date);
+        etDate.setText(note.getStringCreationDate());
+        TextView tvDescription = view.findViewById(R.id.text_view_description);
+        tvDescription.setText(note.getDescription());
+        TextView tvContent = view.findViewById(R.id.edit_text_content);
+        tvContent.setText(note.getContent());
+        return view;
     }
 }
