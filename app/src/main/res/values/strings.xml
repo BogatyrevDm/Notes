@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Notes</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="data_format">yyyy/mm/dd</string>
+    <string name="date">Date</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="content">content</string>
 </resources>

@@ -6,43 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".SingleNoteFragment">
 
-    <LinearLayout
-        android:id="@+id/linear_layout_first"
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/text_view_name"
+        android:hint="@string/name"
+
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintBottom_toBottomOf="@id/edit_text_date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/text_view_name"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="First note"
-            app:layout_constraintEnd_toStartOf="@id/edit_text_date"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <EditText
+        android:id="@+id/edit_text_date"
+        android:hint="@string/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/edit_text_date"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:inputType="date"
-            android:text="2006/01/06"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </LinearLayout>
-
-    <TextView
+    <EditText
         android:id="@+id/text_view_description"
+        android:hint="@string/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/linear_layout_first"
-        app:layout_constraintTop_toBottomOf="@id/linear_layout_first" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_name" />
 
     <EditText
         android:id="@+id/edit_text_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:hint="@string/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_view_description" />
 
