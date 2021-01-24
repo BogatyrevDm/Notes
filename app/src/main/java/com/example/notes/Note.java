@@ -3,22 +3,21 @@ package com.example.notes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
-
 class Note implements Parcelable {
     private String name; //Имя заметки
     private String description; //Описание
-    private Date creationDate; //Дата создания
+    private String creationDate; //Дата создания
     private boolean isImportant; //Признак важности
     private String content; //Содержимое заметки
 
-    public Note(String name, String description, Date creationDate, boolean isImportant, String content) {
+    public Note(String name, String description, String creationDate, boolean isImportant, String content) {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
         this.isImportant = isImportant;
         this.content = content;
     }
+
     public Note(String name) {
         this.name = name;
     }
@@ -26,6 +25,7 @@ class Note implements Parcelable {
     protected Note(Parcel in) {
         name = in.readString();
         description = in.readString();
+        creationDate = in.readString();
         isImportant = in.readByte() != 0;
         content = in.readString();
     }
@@ -58,14 +58,11 @@ class Note implements Parcelable {
         this.description = description;
     }
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
-    public String getStringCreationDate() {
-        return String.valueOf(getCreationDate());
-    }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -94,6 +91,7 @@ class Note implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(description);
+        dest.writeString(creationDate);
         dest.writeByte((byte) (isImportant ? 1 : 0));
         dest.writeString(content);
     }
