@@ -1,5 +1,7 @@
 package com.example.notes;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -46,16 +48,17 @@ public class SingleNoteFragment extends Fragment {
         TextView tvName = view.findViewById(R.id.text_view_name);
         tvName.setText(note.getName());
         TextView tvDate = view.findViewById(R.id.text_view_date);
-        tvDate.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), DataPickerActivity.class);
-
-            intent.putExtra(DATE_EXTRA, note.getCreationDate());
-            startActivityForResult(intent, REQUEST_CODE);
-        });
-//        String pattern = getResources().getString(R.string.data_format);
-//        DateFormat df = new SimpleDateFormat(pattern);
-//        String todayAsString = df.format(note.getCreationDate());
         tvDate.setText(note.getCreationDate());
+        tvDate.setOnClickListener(v -> {
+            Context context = getContext();
+            if (context != null) {
+                Intent intent = new Intent(context, DataPickerActivity.class);
+
+                intent.putExtra(DATE_EXTRA, note.getCreationDate());
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+
         TextView tvDescription = view.findViewById(R.id.text_view_description);
         tvDescription.setText(note.getDescription());
         TextView tvContent = view.findViewById(R.id.edit_text_content);
@@ -70,11 +73,16 @@ public class SingleNoteFragment extends Fragment {
             super.onActivityResult(requestCode, resultCode, data);
             return;
         }
-        if (resultCode == getActivity().RESULT_OK) {
+        //Если нажата кнопка ОК - установим дату
+        if (resultCode == Activity.RESULT_OK) {
             String dateStr = data.getExtras().getString(DATE_EXTRA);
             note.setCreationDate(dateStr);
-            TextView tvDate = getActivity().findViewById(R.id.text_view_date);
-            tvDate.setText(dateStr);
+            Activity activity = getActivity();
+            if (activity != null) {
+                TextView tvDate = activity.findViewById(R.id.text_view_date);
+                tvDate.setText(dateStr);
+            }
         }
+
     }
 }

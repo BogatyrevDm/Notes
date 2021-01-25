@@ -11,10 +11,12 @@ public class SingleNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_note);
+        //Если это ландшафтный режим - закроем активность
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             finish();
             return;
         }
+        //Если открываем первый раз - создадим фрагмент
         if (savedInstanceState == null) {
             SingleNoteFragment details = new SingleNoteFragment();
             details.setArguments(getIntent().getExtras());

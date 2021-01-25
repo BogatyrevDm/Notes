@@ -18,10 +18,6 @@ class Note implements Parcelable {
         this.content = content;
     }
 
-    public Note(String name) {
-        this.name = name;
-    }
-
     protected Note(Parcel in) {
         name = in.readString();
         description = in.readString();

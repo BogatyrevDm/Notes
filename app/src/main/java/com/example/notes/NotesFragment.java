@@ -1,5 +1,6 @@
 package com.example.notes;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -31,7 +32,7 @@ public class NotesFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        //Установим признак ландшафтной ориентации
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
@@ -39,43 +40,38 @@ public class NotesFragment extends Fragment {
         } else {
             currentNote = createNewNote(0);
         }
-        if (isLandscape){
+        if (isLandscape) {
             showNoteLand(currentNote);
         }
     }
-
+    //Инициализируем интерфейс
     private void initList(View view) {
         LinearLayout layoutView = (LinearLayout) view;
         String[] notes = getResources().getStringArray(R.array.names);
         for (int i = 0; i < notes.length; i++) {
             String note = notes[i];
-            TextView tv = new TextView(getContext());
-            tv.setText(note);
-            layoutView.addView(tv);
-            final int fi = i;
-            tv.setOnClickListener(v -> {
-                currentNote = createNewNote(fi);
-                showNote(currentNote);
-            });
+            Context context = getContext();
+            if (context != null) {
+                TextView tv = new TextView(context);
+                tv.setText(note);
+                layoutView.addView(tv);
+                final int fi = i;
+                tv.setOnClickListener(v -> {
+                    currentNote = createNewNote(fi);
+                    showNote(currentNote);
+                });
+            }
         }
     }
 
     private Note createNewNote(int index) {
         Resources res = getResources();
-        String stringDate = res.getStringArray(R.array.dates)[index];
-//        DateFormat df = new SimpleDateFormat(getResources().getString(R.string.data_format));
-//        Date date = new Date();
-//        try {
-//            date = df.parse(stringDate);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
         int isImportantInt = Integer.parseInt(res.getStringArray(R.array.importances)[index]);
         Boolean isImportant = isImportantInt == 1;
         return new Note(res.getStringArray(R.array.names)[index],
                 res.getStringArray(R.array.descriptions)[index], res.getStringArray(R.array.dates)[index], isImportant, res.getStringArray(R.array.contents)[index]);
     }
-
+    //Покажем содержимое заметки
     private void showNote(Note currentNote) {
         if (isLandscape) {
             showNoteLand(currentNote);
@@ -83,7 +79,7 @@ public class NotesFragment extends Fragment {
             showNotePort(currentNote);
         }
     }
-
+    //Покажем содержимое заметки для ландшафтного режима
     private void showNoteLand(Note currentNote) {
         SingleNoteFragment detail = SingleNoteFragment.newInstance(currentNote);
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
@@ -92,11 +88,14 @@ public class NotesFragment extends Fragment {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commit();
     }
-
+    //Покажем содержимое заметки для портретного режима
     private void showNotePort(Note currentNote) {
-        Intent intent = new Intent(getActivity(), SingleNoteActivity.class);
-        intent.putExtra(SingleNoteFragment.ARG_SINGLE_NOTE, currentNote);
-        startActivity(intent);
+        Context context = getContext();
+        if (context != null) {
+            Intent intent = new Intent(context, SingleNoteActivity.class);
+            intent.putExtra(SingleNoteFragment.ARG_SINGLE_NOTE, currentNote);
+            startActivity(intent);
+        }
     }
 
     @Override
