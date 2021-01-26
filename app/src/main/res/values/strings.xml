@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Notes</string>
+    <string name="data_format">yyyy/mm/dd</string>
+    <string name="date">Date</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="content">content</string>
+    <string name="date_format">%d/%d/%d</string>
+    <string name="date_separator">/</string>
 </resources>
