@@ -130,7 +130,7 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_main, menu);
+        inflater.inflate(R.menu.menu_fragment_notes, menu);
     }
 
     @Override
