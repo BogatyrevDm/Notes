@@ -8,6 +8,9 @@ import android.widget.DatePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class DataPickerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +31,9 @@ public class DataPickerActivity extends AppCompatActivity {
         buttonOk.setOnClickListener((View.OnClickListener) v -> {
             Intent intent = new Intent();
             DatePicker picker = (DatePicker) findViewById(R.id.date_picker);
-            String dateStr = String.format(getString(R.string.date_format), picker.getYear(), picker.getMonth() + 1, picker.getDayOfMonth());
-            intent.putExtra(SingleNoteFragment.DATE_EXTRA, dateStr);
+            Calendar calendar = new GregorianCalendar(picker.getYear(), picker.getMonth() + 1, picker.getDayOfMonth());
+            long dateUT = calendar.getTimeInMillis();
+            intent.putExtra(SingleNoteFragment.DATE_EXTRA, dateUT);
             setResult(RESULT_OK, intent);
             finish();
         });
@@ -41,9 +45,11 @@ public class DataPickerActivity extends AppCompatActivity {
 
     //Инициализируем DatePicker
     private void initDatePicker() {
-        String dateStr = getIntent().getExtras().getString(SingleNoteFragment.DATE_EXTRA);
         DatePicker picker = (DatePicker) findViewById(R.id.date_picker);
-        String[] arr = dateStr.split(getString(R.string.date_separator));
-        picker.updateDate((int) Integer.parseInt(arr[0]), (int) Integer.parseInt(arr[1]) - 1, (int) Integer.parseInt(arr[2]));
+        long dateUT = getIntent().getExtras().getLong(SingleNoteFragment.DATE_EXTRA);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(((long) dateUT));
+        picker.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)-1, calendar.get(Calendar.DAY_OF_MONTH));
     }
 }

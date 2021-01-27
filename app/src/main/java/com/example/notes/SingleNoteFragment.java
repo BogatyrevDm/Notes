@@ -48,13 +48,13 @@ public class SingleNoteFragment extends Fragment {
         TextView tvName = view.findViewById(R.id.text_view_name);
         tvName.setText(note.getName());
         TextView tvDate = view.findViewById(R.id.text_view_date);
-        tvDate.setText(note.getCreationDate());
+        tvDate.setText(note.getFormatedCreationDate());
         tvDate.setOnClickListener(v -> {
             Context context = getContext();
             if (context != null) {
                 Intent intent = new Intent(context, DataPickerActivity.class);
 
-                intent.putExtra(DATE_EXTRA, note.getCreationDate());
+                intent.putExtra(DATE_EXTRA, note.getCreationDateUnixTime());
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
@@ -75,12 +75,11 @@ public class SingleNoteFragment extends Fragment {
         }
         //Если нажата кнопка ОК - установим дату
         if (resultCode == Activity.RESULT_OK) {
-            String dateStr = data.getExtras().getString(DATE_EXTRA);
-            note.setCreationDate(dateStr);
+            note.setCreationDateUnixTime(data.getExtras().getLong(DATE_EXTRA));
             Activity activity = getActivity();
             if (activity != null) {
                 TextView tvDate = activity.findViewById(R.id.text_view_date);
-                tvDate.setText(dateStr);
+                tvDate.setText(note.getFormatedCreationDate());
             }
         }
 

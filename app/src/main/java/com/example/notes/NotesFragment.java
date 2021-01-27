@@ -1,5 +1,6 @@
 package com.example.notes;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -69,7 +71,7 @@ public class NotesFragment extends Fragment {
         int isImportantInt = Integer.parseInt(res.getStringArray(R.array.importances)[index]);
         Boolean isImportant = isImportantInt == 1;
         return new Note(res.getStringArray(R.array.names)[index],
-                res.getStringArray(R.array.descriptions)[index], res.getStringArray(R.array.dates)[index], isImportant, res.getStringArray(R.array.contents)[index]);
+                res.getStringArray(R.array.descriptions)[index], Long.parseLong(res.getStringArray(R.array.datesUT)[index]),isImportant, res.getStringArray(R.array.contents)[index]);
     }
     //Покажем содержимое заметки
     private void showNote(Note currentNote) {
