@@ -94,9 +94,17 @@ public class NotesFragment extends Fragment {
     private void showNotePort(Note currentNote) {
         Context context = getContext();
         if (context != null) {
-            Intent intent = new Intent(context, SingleNoteActivity.class);
-            intent.putExtra(SingleNoteFragment.ARG_SINGLE_NOTE, currentNote);
-            startActivity(intent);
+
+            SingleNoteFragment detail = SingleNoteFragment.newInstance(currentNote);
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.notes, detail);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            fragmentTransaction.commit();
+//            Intent intent = new Intent(context, SingleNoteActivity.class);
+//            intent.putExtra(SingleNoteFragment.ARG_SINGLE_NOTE, currentNote);
+//            startActivity(intent);
         }
     }
 

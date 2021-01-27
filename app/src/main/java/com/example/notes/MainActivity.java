@@ -17,5 +17,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (savedInstanceState == null) {
+            NotesFragment details = new NotesFragment();
+            details.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction().replace(R.id.notes, details).commit();
+        }
     }
 }
