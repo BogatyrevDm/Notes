@@ -5,10 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -63,10 +68,32 @@ public class SingleNoteFragment extends Fragment {
         tvDescription.setText(note.getDescription());
         TextView tvContent = view.findViewById(R.id.edit_text_content);
         tvContent.setText(note.getContent());
-
+        setHasOptionsMenu(true);
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fragment_single_note, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.send_note:
+                Toast.makeText(getContext(), "Send chosen", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.add_photo:
+                Toast.makeText(getContext(), "Add photo chosen", Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.add_link:
+                Toast.makeText(getContext(), "Add link chosen", Toast.LENGTH_LONG).show();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode != REQUEST_CODE) {

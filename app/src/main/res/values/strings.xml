@@ -10,4 +10,7 @@
     <string name="search">Search</string>
     <string name="add_note">Add</string>
     <string name="sort_notes">Sort</string>
+    <string name="send_note">Send</string>
+    <string name="add_photo">Add photo</string>
+    <string name="add_link">Add link</string>
 </resources>
