@@ -7,4 +7,5 @@
     <string name="content">content</string>
     <string name="date_format">%d/%d/%d</string>
     <string name="date_separator">/</string>
+    <string name="search">Search</string>
 </resources>
