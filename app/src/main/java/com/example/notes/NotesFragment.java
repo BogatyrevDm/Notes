@@ -1,8 +1,6 @@
 package com.example.notes;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -46,6 +44,7 @@ public class NotesFragment extends Fragment {
             showNoteLand(currentNote);
         }
     }
+
     //Инициализируем интерфейс
     private void initList(View view) {
         LinearLayout layoutView = (LinearLayout) view;
@@ -71,8 +70,9 @@ public class NotesFragment extends Fragment {
         int isImportantInt = Integer.parseInt(res.getStringArray(R.array.importances)[index]);
         Boolean isImportant = isImportantInt == 1;
         return new Note(res.getStringArray(R.array.names)[index],
-                res.getStringArray(R.array.descriptions)[index], Long.parseLong(res.getStringArray(R.array.datesUT)[index]),isImportant, res.getStringArray(R.array.contents)[index]);
+                res.getStringArray(R.array.descriptions)[index], Long.parseLong(res.getStringArray(R.array.datesUT)[index]), isImportant, res.getStringArray(R.array.contents)[index]);
     }
+
     //Покажем содержимое заметки
     private void showNote(Note currentNote) {
         if (isLandscape) {
@@ -81,6 +81,7 @@ public class NotesFragment extends Fragment {
             showNotePort(currentNote);
         }
     }
+
     //Покажем содержимое заметки для ландшафтного режима
     private void showNoteLand(Note currentNote) {
         SingleNoteFragment detail = SingleNoteFragment.newInstance(currentNote);
@@ -88,23 +89,24 @@ public class NotesFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.single_note, detail);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
     }
+
     //Покажем содержимое заметки для портретного режима
     private void showNotePort(Note currentNote) {
         Context context = getContext();
         if (context != null) {
 
             SingleNoteFragment detail = SingleNoteFragment.newInstance(currentNote);
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.notes, detail);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            fragmentTransaction.commit();
-//            Intent intent = new Intent(context, SingleNoteActivity.class);
-//            intent.putExtra(SingleNoteFragment.ARG_SINGLE_NOTE, currentNote);
-//            startActivity(intent);
+            FragmentActivity activity = requireActivity();
+            if (activity != null) {
+                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.notes, detail);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
         }
     }
 
