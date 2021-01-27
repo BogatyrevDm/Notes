@@ -8,4 +8,6 @@
     <string name="date_format">%d/%d/%d</string>
     <string name="date_separator">/</string>
     <string name="search">Search</string>
+    <string name="add_note">Add</string>
+    <string name="sort_notes">Sort</string>
 </resources>
