@@ -4,9 +4,7 @@
     <string name="date">Date</string>
     <string name="name">Name</string>
     <string name="description">Description</string>
-    <string name="content">content</string>
-    <string name="date_format">%d/%d/%d</string>
-    <string name="date_separator">/</string>
+    <string name="content">Content</string>
     <string name="search">Search</string>
     <string name="add_note">Add</string>
     <string name="sort_notes">Sort</string>
