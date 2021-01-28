@@ -1,8 +1,12 @@
 package com.example.notes;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -10,6 +14,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
     // TODO: Переделать на сингл-активити (продумать передачу данных между фрагментами через обзервер)
@@ -44,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initToolBar();
+        initView();
         if (savedInstanceState == null) {
             NotesFragment details = new NotesFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -56,8 +62,42 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initToolBar() {
+    private void initDrawer(Toolbar toolbar) {
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.open_nav_drawer, R.string.close_nav_drawer
+        );
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int itemId = item.getItemId();
+                switch (itemId) {
+                    case R.id.action_settings:
+                        Toast.makeText(MainActivity.this, "Settings pressed", Toast.LENGTH_LONG).show();
+                        drawer.closeDrawer(GravityCompat.START);
+                        return true;
+                    case R.id.action_about:
+                        Toast.makeText(MainActivity.this, "About pressed", Toast.LENGTH_LONG).show();
+                        drawer.closeDrawer(GravityCompat.START);
+                        return true;
+                }
+
+                return false;
+            }
+        });
+    }
+
+    private void initView() {
+        Toolbar toolbar = initToolBar();
+        initDrawer(toolbar);
+    }
+
+    private Toolbar initToolBar() {
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
+        return toolbar;
     }
 }
