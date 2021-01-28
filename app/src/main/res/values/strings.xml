@@ -16,4 +16,5 @@
     <string name="header_text">Notes menu</string>
     <string name="open_nav_drawer">Open navigation drawer</string>
     <string name="close_nav_drawer">Close navigation drawer</string>
+    <string name="settings_text">Some settings</string>
 </resources>
