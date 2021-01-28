@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     // TODO: Переделать на сингл-активити (продумать передачу данных между фрагментами через обзервер)
-    // TODO: Сделать верхнее меню
+
     // TODO: Сделать боковое меню
     // TODO: финальное тестирование Date unix
     // TODO: финальное тестирование сингл-активити
