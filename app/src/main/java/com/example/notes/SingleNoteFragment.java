@@ -3,6 +3,7 @@ package com.example.notes;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class SingleNoteFragment extends Fragment {
 
@@ -55,13 +58,18 @@ public class SingleNoteFragment extends Fragment {
         TextView tvDate = view.findViewById(R.id.text_view_date);
         tvDate.setText(note.getFormatedCreationDate());
         tvDate.setOnClickListener(v -> {
-            Context context = getContext();
-            if (context != null) {
-                Intent intent = new Intent(context, DataPickerActivity.class);
-
-                intent.putExtra(DATE_EXTRA, note.getCreationDateUnixTime());
-                startActivityForResult(intent, REQUEST_CODE);
+            DataPickerFragment detail = DataPickerFragment.newInstance(note);
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            Boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+            if (isLandscape) {
+                fragmentTransaction.replace(R.id.single_note, detail);
+            } else {
+                fragmentTransaction.replace(R.id.notes, detail);
             }
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commitAllowingStateLoss();
         });
 
         TextView tvDescription = view.findViewById(R.id.text_view_description);
@@ -94,6 +102,7 @@ public class SingleNoteFragment extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode != REQUEST_CODE) {

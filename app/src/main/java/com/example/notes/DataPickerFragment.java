@@ -56,16 +56,20 @@ public class DataPickerFragment extends Fragment {
             Calendar calendar = new GregorianCalendar(picker.getYear(), picker.getMonth() + 1, picker.getDayOfMonth());
             long dateUT = calendar.getTimeInMillis();
             note.setCreationDateUnixTime(dateUT);
-
+            popBackStack();
         });
         Button buttonCancel = view.findViewById(R.id.button_cancel_date_picker);
         buttonCancel.setOnClickListener(v -> {
-            FragmentActivity activity = requireActivity();
-            if (activity != null) {
-                FragmentManager fragmentManager = activity.getSupportFragmentManager();
-                fragmentManager.popBackStack();
-            }
+            popBackStack();
         });
+    }
+
+    private void popBackStack() {
+        FragmentActivity activity = requireActivity();
+        if (activity != null) {
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            fragmentManager.popBackStack();
+        }
     }
 
     //Инициализируем DatePicker
