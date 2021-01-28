@@ -66,10 +66,8 @@ public class DataPickerFragment extends Fragment {
 
     private void popBackStack() {
         FragmentActivity activity = requireActivity();
-        if (activity != null) {
-            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-            fragmentManager.popBackStack();
-        }
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        fragmentManager.popBackStack();
     }
 
     //Инициализируем DatePicker

@@ -100,17 +100,14 @@ public class NotesFragment extends Fragment {
     private void showNotePort(Note currentNote) {
         Context context = getContext();
         if (context != null) {
-
             SingleNoteFragment detail = SingleNoteFragment.newInstance(currentNote);
             FragmentActivity activity = requireActivity();
-            if (activity != null) {
-                FragmentManager fragmentManager = activity.getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.notes, detail);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                fragmentTransaction.commitAllowingStateLoss();
-            }
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.notes, detail);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            fragmentTransaction.commitAllowingStateLoss();
         }
     }
 
