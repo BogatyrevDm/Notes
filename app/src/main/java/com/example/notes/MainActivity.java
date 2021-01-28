@@ -7,6 +7,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -74,23 +75,11 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = item.getItemId();
                 switch (itemId) {
                     case R.id.action_settings:
-                        SettingsFragment detail = new SettingsFragment();
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        Boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-                        if (isLandscape) {
-                            fragmentTransaction.replace(R.id.single_note, detail);
-                        } else {
-                            fragmentTransaction.replace(R.id.notes, detail);
-                        }
-                        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commitAllowingStateLoss();
-
+                        openItemMenuFragment(new SettingsFragment());
                         drawer.closeDrawer(GravityCompat.START);
                         return true;
                     case R.id.action_about:
-                        Toast.makeText(MainActivity.this, "About pressed", Toast.LENGTH_LONG).show();
+                        openItemMenuFragment(new AboutFragment());
                         drawer.closeDrawer(GravityCompat.START);
                         return true;
                 }
@@ -98,6 +87,20 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    void openItemMenuFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        if (isLandscape) {
+            fragmentTransaction.replace(R.id.single_note, fragment);
+        } else {
+            fragmentTransaction.replace(R.id.notes, fragment);
+        }
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     private void initView() {
