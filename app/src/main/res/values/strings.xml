@@ -11,4 +11,6 @@
     <string name="send_note">Send</string>
     <string name="add_photo">Add photo</string>
     <string name="add_link">Add link</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
 </resources>
