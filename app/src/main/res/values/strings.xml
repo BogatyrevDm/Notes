@@ -18,4 +18,5 @@
     <string name="close_nav_drawer">Close navigation drawer</string>
     <string name="settings_text">Some settings</string>
     <string name="about_text">This notebook is the property of the Half-Blood Prince</string>
+    <string name="user_name">Some user name</string>
 </resources>
