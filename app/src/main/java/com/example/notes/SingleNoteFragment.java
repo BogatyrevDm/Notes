@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -59,17 +60,9 @@ public class SingleNoteFragment extends Fragment {
         tvDate.setText(note.getFormatedCreationDate());
         tvDate.setOnClickListener(v -> {
             DataPickerFragment detail = DataPickerFragment.newInstance(note);
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-            if (isLandscape) {
-                fragmentTransaction.replace(R.id.single_note, detail);
-            } else {
-                fragmentTransaction.replace(R.id.notes, detail);
-            }
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commitAllowingStateLoss();
+            FragmentActivity activity = requireActivity();
+            FragmentHandler.replaceFragment(activity,detail,FragmentHandler.getIdFromOrientation(activity), true);
+
         });
 
         TextView tvDescription = view.findViewById(R.id.text_view_description);

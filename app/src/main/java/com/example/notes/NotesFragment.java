@@ -89,11 +89,7 @@ public class NotesFragment extends Fragment {
     //Покажем содержимое заметки для ландшафтного режима
     private void showNoteLand(Note currentNote) {
         SingleNoteFragment detail = SingleNoteFragment.newInstance(currentNote);
-        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.single_note, detail);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commitAllowingStateLoss();
+        FragmentHandler.replaceFragment(requireActivity(), detail, R.id.single_note, false);
     }
 
     //Покажем содержимое заметки для портретного режима
@@ -101,13 +97,7 @@ public class NotesFragment extends Fragment {
         Context context = getContext();
         if (context != null) {
             SingleNoteFragment detail = SingleNoteFragment.newInstance(currentNote);
-            FragmentActivity activity = requireActivity();
-            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.notes, detail);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            fragmentTransaction.commitAllowingStateLoss();
+            FragmentHandler.replaceFragment(requireActivity(), detail, R.id.notes, true);
         }
     }
 
@@ -141,7 +131,6 @@ public class NotesFragment extends Fragment {
                 Toast.makeText(getContext(), "Sort chosen", Toast.LENGTH_LONG).show();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

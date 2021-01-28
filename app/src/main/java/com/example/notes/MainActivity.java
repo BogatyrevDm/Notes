@@ -50,15 +50,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        if (savedInstanceState == null) {
-            NotesFragment details = new NotesFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.notes, details);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            fragmentTransaction.commitAllowingStateLoss();
-        }
+        FragmentHandler.replaceFragment(MainActivity.this, new NotesFragment(), R.id.notes, true);
     }
 
     private void initDrawer(Toolbar toolbar) {
@@ -75,11 +67,11 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = item.getItemId();
                 switch (itemId) {
                     case R.id.action_settings:
-                        openItemMenuFragment(new SettingsFragment());
+                        FragmentHandler.replaceFragment(MainActivity.this, new SettingsFragment(), FragmentHandler.getIdFromOrientation(MainActivity.this),true);
                         drawer.closeDrawer(GravityCompat.START);
                         return true;
                     case R.id.action_about:
-                        openItemMenuFragment(new AboutFragment());
+                        FragmentHandler.replaceFragment(MainActivity.this, new AboutFragment(), FragmentHandler.getIdFromOrientation(MainActivity.this),true);
                         drawer.closeDrawer(GravityCompat.START);
                         return true;
                 }
@@ -87,20 +79,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-    }
-
-    void openItemMenuFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        if (isLandscape) {
-            fragmentTransaction.replace(R.id.single_note, fragment);
-        } else {
-            fragmentTransaction.replace(R.id.notes, fragment);
-        }
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commitAllowingStateLoss();
     }
 
     private void initView() {
