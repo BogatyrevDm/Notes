@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,9 +19,6 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
-    // TODO: Переделать на сингл-активити (продумать передачу данных между фрагментами через обзервер)
-
-    // TODO: Сделать боковое меню
     // TODO: финальное тестирование Date unix
     // TODO: финальное тестирование сингл-активити
     // TODO: финальное тестирование меню
@@ -76,7 +74,19 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = item.getItemId();
                 switch (itemId) {
                     case R.id.action_settings:
-                        Toast.makeText(MainActivity.this, "Settings pressed", Toast.LENGTH_LONG).show();
+                        SettingsFragment detail = new SettingsFragment();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        Boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+                        if (isLandscape) {
+                            fragmentTransaction.replace(R.id.single_note, detail);
+                        } else {
+                            fragmentTransaction.replace(R.id.notes, detail);
+                        }
+                        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commitAllowingStateLoss();
+
                         drawer.closeDrawer(GravityCompat.START);
                         return true;
                     case R.id.action_about:
