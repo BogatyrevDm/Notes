@@ -44,6 +44,7 @@ public class NotesFragment extends Fragment {
         } else {
             currentNote = createNewNote(0);
         }
+
         if (isLandscape) {
             showNoteLand(currentNote);
         }
@@ -103,8 +104,10 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(CURRENT_NOTE, currentNote);
         super.onSaveInstanceState(outState);
+        if (currentNote != null){
+            outState.putParcelable(CURRENT_NOTE, currentNote);
+        }
     }
 
     @Override
@@ -131,6 +134,7 @@ public class NotesFragment extends Fragment {
                 Toast.makeText(getContext(), "Sort chosen", Toast.LENGTH_LONG).show();
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }

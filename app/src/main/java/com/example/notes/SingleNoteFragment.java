@@ -24,8 +24,6 @@ import androidx.fragment.app.FragmentTransaction;
 public class SingleNoteFragment extends Fragment {
 
     static final String ARG_SINGLE_NOTE = "note";
-    private static final int REQUEST_CODE = 99;
-    static final String DATE_EXTRA = "dateForPicker";
 
     private Note note;
 
@@ -94,23 +92,5 @@ public class SingleNoteFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode != REQUEST_CODE) {
-            super.onActivityResult(requestCode, resultCode, data);
-            return;
-        }
-        //Если нажата кнопка ОК - установим дату
-        if (resultCode == Activity.RESULT_OK) {
-            note.setCreationDateUnixTime(data.getExtras().getLong(DATE_EXTRA));
-            Activity activity = getActivity();
-            if (activity != null) {
-                TextView tvDate = activity.findViewById(R.id.text_view_date);
-                tvDate.setText(note.getFormatedCreationDate());
-            }
-        }
-
     }
 }
