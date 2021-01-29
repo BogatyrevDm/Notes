@@ -1,5 +1,10 @@
 package com.example.notes;
 
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,24 +12,10 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
-    // TODO: финальное тестирование Date unix
-    // TODO: финальное тестирование сингл-активити
-    // TODO: финальное тестирование меню
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -67,11 +58,11 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = item.getItemId();
                 switch (itemId) {
                     case R.id.action_settings:
-                        FragmentHandler.replaceFragment(MainActivity.this, new SettingsFragment(), FragmentHandler.getIdFromOrientation(MainActivity.this),true);
+                        FragmentHandler.replaceFragment(MainActivity.this, new SettingsFragment(), FragmentHandler.getIdFromOrientation(MainActivity.this), true);
                         drawer.closeDrawer(GravityCompat.START);
                         return true;
                     case R.id.action_about:
-                        FragmentHandler.replaceFragment(MainActivity.this, new AboutFragment(), FragmentHandler.getIdFromOrientation(MainActivity.this),true);
+                        FragmentHandler.replaceFragment(MainActivity.this, new AboutFragment(), FragmentHandler.getIdFromOrientation(MainActivity.this), true);
                         drawer.closeDrawer(GravityCompat.START);
                         return true;
                 }
