@@ -3,17 +3,19 @@ package com.example.notes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Calendar;
+
 class Note implements Parcelable {
     private String name; //Имя заметки
     private String description; //Описание
-    private String creationDate; //Дата создания
+    private long creationDateUnixTime; //Дата создания Unix time
     private boolean isImportant; //Признак важности
     private String content; //Содержимое заметки
 
-    public Note(String name, String description, String creationDate, boolean isImportant, String content) {
+    public Note(String name, String description, long creationDateUnixTime, boolean isImportant, String content) {
         this.name = name;
         this.description = description;
-        this.creationDate = creationDate;
+        this.creationDateUnixTime = creationDateUnixTime;
         this.isImportant = isImportant;
         this.content = content;
     }
@@ -21,7 +23,7 @@ class Note implements Parcelable {
     protected Note(Parcel in) {
         name = in.readString();
         description = in.readString();
-        creationDate = in.readString();
+        creationDateUnixTime = in.readLong();
         isImportant = in.readByte() != 0;
         content = in.readString();
     }
@@ -54,12 +56,18 @@ class Note implements Parcelable {
         this.description = description;
     }
 
-    public String getCreationDate() {
-        return creationDate;
+    public long getCreationDateUnixTime() {
+        return creationDateUnixTime;
     }
 
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
+    public void setCreationDateUnixTime(long creationDateUnixTime) {
+        this.creationDateUnixTime = creationDateUnixTime;
+    }
+
+    public String getFormatedCreationDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(((long) getCreationDateUnixTime()));
+        return String.format("%d/%d/%d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     public boolean isImportant() {
@@ -78,6 +86,7 @@ class Note implements Parcelable {
         this.content = content;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -87,8 +96,9 @@ class Note implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(description);
-        dest.writeString(creationDate);
+        dest.writeLong(creationDateUnixTime);
         dest.writeByte((byte) (isImportant ? 1 : 0));
         dest.writeString(content);
     }
+
 }

@@ -24,10 +24,10 @@
         <item>0</item>
         <item>1</item>
     </string-array>
-    <string-array name="dates">
-        <item>2020/04/20</item>
-        <item>2021/01/06</item>
-        <item>2019/03/13</item>
-        <item>2018/12/1</item>
+    <string-array name="datesUT">
+        <item>1589932800000</item>
+        <item>1612569600000</item>
+        <item>1555113600000</item>
+        <item>1546300800000</item>
     </string-array>
 </resources>
