@@ -1,8 +1,5 @@
 package com.example.notes;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,15 +8,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 public class SingleNoteFragment extends Fragment {
 
@@ -59,9 +54,15 @@ public class SingleNoteFragment extends Fragment {
         tvDate.setOnClickListener(v -> {
             DataPickerFragment detail = DataPickerFragment.newInstance(note);
             FragmentActivity activity = requireActivity();
-            FragmentHandler.replaceFragment(activity,detail,FragmentHandler.getIdFromOrientation(activity), true);
+            FragmentHandler.replaceFragment(activity, detail, FragmentHandler.getIdFromOrientation(activity), true);
 
         });
+        Button buttonOk = view.findViewById(R.id.button_ok_single_note);
+        //Пока оба листенера будут делать одно и тоже. Разветвлю логику,
+        // когда буду реализовывать сохранение измененных заметок
+        buttonOk.setOnClickListener(v -> popBackStackIfNotLand());
+        Button buttonCancel = view.findViewById(R.id.button_cancel_single_note);
+        buttonCancel.setOnClickListener(v -> popBackStackIfNotLand());
 
         TextView tvDescription = view.findViewById(R.id.text_view_description);
         tvDescription.setText(note.getDescription());
@@ -69,6 +70,12 @@ public class SingleNoteFragment extends Fragment {
         tvContent.setText(note.getContent());
         setHasOptionsMenu(true);
         return view;
+    }
+
+    //Выкидываем активность из стека, когда ориентация портретная
+    private void popBackStackIfNotLand() {
+        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE)
+            FragmentHandler.popBackStack(requireActivity());
     }
 
     @Override
