@@ -10,27 +10,41 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 public class NotesFragment extends Fragment {
 
     private static final String CURRENT_NOTE = "CurrentNote";
     private Note currentNote;
+    private int currentNoteInt = 0;
+
+    private ArrayList<Note> notesArray = new ArrayList<>();
     private boolean isLandscape;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setNotesArray();
         initList(view);
+    }
+
+    private void setNotesArray() {
+        if (notesArray.size() > 0) {
+            notesArray.clear();
+        }
+        String[] notes = getResources().getStringArray(R.array.names);
+        for (int i = 0; i < notes.length; i++) {
+            notesArray.add(createNewNote(i));
+        }
+
     }
 
     @Override
@@ -40,9 +54,9 @@ public class NotesFragment extends Fragment {
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
-            currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
+            currentNote = getNote(savedInstanceState.getInt(CURRENT_NOTE));
         } else {
-            currentNote = createNewNote(0);
+            currentNote = getNote(0);
         }
 
         if (isLandscape) {
@@ -52,30 +66,32 @@ public class NotesFragment extends Fragment {
 
     //Инициализируем интерфейс
     private void initList(View view) {
-        LinearLayout layoutView = (LinearLayout) view;
-        String[] notes = getResources().getStringArray(R.array.names);
-        for (int i = 0; i < notes.length; i++) {
-            String note = notes[i];
-            Context context = getContext();
-            if (context != null) {
-                TextView tv = new TextView(context);
-                tv.setText(note);
-                layoutView.addView(tv);
-                final int fi = i;
-                tv.setOnClickListener(v -> {
-                    currentNote = createNewNote(fi);
-                    showNote(currentNote);
-                });
+        RecyclerView recyclerView = view.findViewById(R.id.recycler);
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(notesArray);
+        recyclerViewAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                currentNote = getNote(position);
+                showNote(currentNote);
             }
-        }
+        });
+        recyclerView.setAdapter(recyclerViewAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+    }
+
+    private Note getNote(int position) {
+        return notesArray.get(position);
     }
 
     private Note createNewNote(int index) {
         Resources res = getResources();
         int isImportantInt = Integer.parseInt(res.getStringArray(R.array.importances)[index]);
         Boolean isImportant = isImportantInt == 1;
-        return new Note(res.getStringArray(R.array.names)[index],
+        Note note = new Note(res.getStringArray(R.array.names)[index],
                 res.getStringArray(R.array.descriptions)[index], Long.parseLong(res.getStringArray(R.array.datesUT)[index]), isImportant, res.getStringArray(R.array.contents)[index]);
+        return note;
     }
 
     //Покажем содержимое заметки
@@ -105,9 +121,8 @@ public class NotesFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (currentNote != null){
-            outState.putParcelable(CURRENT_NOTE, currentNote);
-        }
+        outState.putInt(CURRENT_NOTE, currentNoteInt);
+//            outState.putParcelable(CURRENT_NOTE, currentNote);
     }
 
     @Override
