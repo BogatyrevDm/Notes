@@ -23,9 +23,7 @@ import java.util.ArrayList;
 public class NotesFragment extends Fragment {
 
     private static final String CURRENT_NOTE = "CurrentNote";
-    private Note currentNote;
     private int currentNoteInt = 0;
-
     private ArrayList<Note> notesArray = new ArrayList<>();
     private boolean isLandscape;
 
@@ -54,13 +52,13 @@ public class NotesFragment extends Fragment {
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
-            currentNote = getNote(savedInstanceState.getInt(CURRENT_NOTE));
+            currentNoteInt = savedInstanceState.getInt(CURRENT_NOTE);
         } else {
-            currentNote = getNote(0);
+            currentNoteInt = 0;
         }
 
         if (isLandscape) {
-            showNoteLand(currentNote);
+            showNoteLand(getNote(currentNoteInt));
         }
     }
 
@@ -68,13 +66,7 @@ public class NotesFragment extends Fragment {
     private void initList(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(notesArray);
-        recyclerViewAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                currentNote = getNote(position);
-                showNote(currentNote);
-            }
-        });
+        recyclerViewAdapter.setOnItemClickListener(position -> showNote(getNote(position)));
         recyclerView.setAdapter(recyclerViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -122,7 +114,6 @@ public class NotesFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(CURRENT_NOTE, currentNoteInt);
-//            outState.putParcelable(CURRENT_NOTE, currentNote);
     }
 
     @Override
