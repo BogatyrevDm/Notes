@@ -27,5 +27,9 @@ abstract class FragmentHandler {
             return R.id.notes;
         }
     }
+    static void popBackStack(FragmentActivity activity) {
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        fragmentManager.popBackStack();
+    }
 }
 
