@@ -103,8 +103,6 @@ public class NotesFragment extends Fragment {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater menuInflater = requireActivity().getMenuInflater();
         menuInflater.inflate(R.menu.menu_context, menu);
-        //Для ландшафтной ориентации - скроем. В ней окно редактирования открыто по умолчанию.
-        menu.findItem(R.id.change_note).setVisible(!isLandscape);
     }
 
     private Note getNote(int position) {
@@ -200,8 +198,6 @@ public class NotesFragment extends Fragment {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int position = recyclerViewAdapter.getMenuPosition();
         switch (item.getItemId()) {
-            case R.id.change_note:
-                return true;
             case R.id.delete_note:
                 notesSource.deleteNote(position);
                 recyclerViewAdapter.notifyItemRemoved(position);
