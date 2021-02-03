@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.notes.FragmentHandler;
 import com.example.notes.R;
 import com.example.notes.data.Note;
+import com.example.notes.data.NoteSource;
+import com.example.notes.data.NoteSourceImpl;
 
 import java.util.ArrayList;
 
@@ -28,25 +30,19 @@ public class NotesFragment extends Fragment {
 
     private static final String CURRENT_NOTE = "CurrentNote";
     private int currentNoteInt = 0;
-    private ArrayList<Note> notesArray = new ArrayList<>();
+    private NoteSource notesSource;
     private boolean isLandscape;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        notesSource = new NoteSourceImpl(getResources()).init();
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setNotesArray();
         initList(view);
-    }
-
-    private void setNotesArray() {
-        if (notesArray.size() > 0) {
-            notesArray.clear();
-        }
-        String[] notes = getResources().getStringArray(R.array.names);
-        for (int i = 0; i < notes.length; i++) {
-            notesArray.add(createNewNote(i));
-        }
-
     }
 
     @Override
@@ -69,7 +65,7 @@ public class NotesFragment extends Fragment {
     //Инициализируем интерфейс
     private void initList(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(notesArray);
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(notesSource);
         recyclerViewAdapter.setOnItemClickListener(position -> showNote(getNote(position)));
         recyclerView.setAdapter(recyclerViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
@@ -78,7 +74,7 @@ public class NotesFragment extends Fragment {
     }
 
     private Note getNote(int position) {
-        return notesArray.get(position);
+        return notesSource.getNote(position);
     }
 
     private Note createNewNote(int index) {

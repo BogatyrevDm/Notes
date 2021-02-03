@@ -10,11 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notes.R;
 import com.example.notes.data.Note;
+import com.example.notes.data.NoteSource;
 
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    private ArrayList<Note> dataSource;
+    private NoteSource dataSource;
     private OnItemClickListener clickListener;
 
     @NonNull
@@ -24,7 +25,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ViewHolder(v);
     }
 
-    public RecyclerViewAdapter(ArrayList<Note> dataSource) {
+    public RecyclerViewAdapter(NoteSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -34,7 +35,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.onBind(dataSource.get(position));
+        holder.onBind(dataSource.getNote(position));
     }
 
     @Override
