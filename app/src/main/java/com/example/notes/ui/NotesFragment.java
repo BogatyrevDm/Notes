@@ -85,14 +85,20 @@ public class NotesFragment extends Fragment {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int position = recyclerViewAdapter.getMenuPosition();
-                switch (item.getItemId()) {
-                    case R.id.change_note:
-                        return true;
-                    case R.id.delete_note:
-                        notesSource.deleteNote(position);
-                        recyclerViewAdapter.notifyItemRemoved(position);
-                        return true;
+        switch (item.getItemId()) {
+            case R.id.change_note:
+                return true;
+            case R.id.delete_note:
+                notesSource.deleteNote(position);
+                recyclerViewAdapter.notifyItemRemoved(position);
+                if (isLandscape && notesSource.size() > 0) {
+                    if (notesSource.size() <= position) {
+                        position--;
+                    }
+                    showNoteLand(notesSource.getNote(position));
                 }
+                return true;
+        }
         return super.onContextItemSelected(item);
     }
 
@@ -159,8 +165,9 @@ public class NotesFragment extends Fragment {
             case R.id.add_note:
                 Toast.makeText(getContext(), "Add chosen", Toast.LENGTH_LONG).show();
                 return true;
-            case R.id.sort_notes:
-                Toast.makeText(getContext(), "Sort chosen", Toast.LENGTH_LONG).show();
+            case R.id.clear_notes:
+                notesSource.clearNotes();
+                recyclerViewAdapter.notifyDataSetChanged();
                 return true;
         }
 
