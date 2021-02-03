@@ -13,18 +13,21 @@ import com.example.notes.R;
 import com.example.notes.data.Note;
 import com.example.notes.data.NoteSource;
 
-import java.util.ArrayList;
-
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private NoteSource dataSource;
     private OnItemClickListener clickListener;
     private final Fragment fragment;
+    private int menuPosition;
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item, parent, false);
         return new ViewHolder(v);
+    }
+
+    public int getMenuPosition() {
+        return menuPosition;
     }
 
     public RecyclerViewAdapter(NoteSource dataSource, Fragment fragment) {
@@ -51,11 +54,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         void onItemClick(int position);
     }
 
-    void registerContextMenu(View view) {
-        if (fragment != null) {
-            fragment.registerForContextMenu(view);
-        }
-    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewName;
@@ -74,6 +73,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public void onBind(Note note) {
             textViewName.setText(note.getName());
             textViewDate.setText(note.getFormatedCreationDate());
+        }
+        private void registerContextMenu(View view) {
+            if (fragment != null) {
+                view.setOnLongClickListener(v -> {
+                    menuPosition = getLayoutPosition();
+                    return false;
+                });
+                fragment.registerForContextMenu(view);
+            }
         }
     }
 }

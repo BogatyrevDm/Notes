@@ -33,6 +33,7 @@ public class NotesFragment extends Fragment {
     private int currentNoteInt = 0;
     private NoteSource notesSource;
     private boolean isLandscape;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class NotesFragment extends Fragment {
     //Инициализируем интерфейс
     private void initList(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(notesSource, this);
+        recyclerViewAdapter = new RecyclerViewAdapter(notesSource, this);
         recyclerViewAdapter.setOnItemClickListener(position -> showNote(getNote(position)));
         recyclerView.setAdapter(recyclerViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
@@ -83,12 +84,15 @@ public class NotesFragment extends Fragment {
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.change_note:
-                return true;
-            case R.id.delete_note:
-                return true;
-        }
+        int position = recyclerViewAdapter.getMenuPosition();
+                switch (item.getItemId()) {
+                    case R.id.change_note:
+                        return true;
+                    case R.id.delete_note:
+                        notesSource.deleteNote(position);
+                        recyclerViewAdapter.notifyItemRemoved(position);
+                        return true;
+                }
         return super.onContextItemSelected(item);
     }
 
