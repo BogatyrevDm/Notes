@@ -13,6 +13,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.notes.ui.AboutFragment;
+import com.example.notes.ui.NotesFragment;
+import com.example.notes.ui.SettingsFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        FragmentHandler.replaceFragment(MainActivity.this, new NotesFragment(), R.id.notes, true);
+        FragmentHandler.replaceFragment(MainActivity.this, new NotesFragment(), R.id.notes, false);
     }
 
     private void initDrawer(Toolbar toolbar) {

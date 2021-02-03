@@ -1,11 +1,11 @@
-package com.example.notes;
+package com.example.notes.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Calendar;
 
-class Note implements Parcelable {
+public class Note implements Parcelable {
     private String name; //Имя заметки
     private String description; //Описание
     private long creationDateUnixTime; //Дата создания Unix time

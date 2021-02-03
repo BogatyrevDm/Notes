@@ -1,4 +1,4 @@
-package com.example.notes;
+package com.example.notes.ui;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -17,6 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.notes.FragmentHandler;
+import com.example.notes.R;
+import com.example.notes.data.Note;
 
 import java.util.ArrayList;
 

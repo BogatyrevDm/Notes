@@ -1,4 +1,4 @@
-package com.example.notes;
+package com.example.notes.ui;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,6 +15,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+
+import com.example.notes.FragmentHandler;
+import com.example.notes.R;
+import com.example.notes.data.Note;
 
 public class SingleNoteFragment extends Fragment {
 
