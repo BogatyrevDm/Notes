@@ -80,6 +80,8 @@ public class NotesFragment extends Fragment {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater menuInflater = requireActivity().getMenuInflater();
         menuInflater.inflate(R.menu.menu_context, menu);
+        //Для ландшафтной ориентации - скроем. В ней окно редактирования открыто по умолчанию.
+        menu.findItem(R.id.change_note).setVisible(!isLandscape);
     }
 
     @Override
@@ -91,7 +93,9 @@ public class NotesFragment extends Fragment {
             case R.id.delete_note:
                 notesSource.deleteNote(position);
                 recyclerViewAdapter.notifyItemRemoved(position);
+                //для ландшафтной ориентации проверим размер списка.
                 if (isLandscape && notesSource.size() > 0) {
+                    //Если удалили позицию в конце списка, откроем по умолчанию предыдущую позицию
                     if (notesSource.size() <= position) {
                         position--;
                     }
