@@ -19,4 +19,6 @@
     <string name="settings_text">Some settings</string>
     <string name="about_text">This notebook is the property of the Half-Blood Prince</string>
     <string name="user_name">Some user name</string>
+    <string name="delete_note">Удалить</string>
+    <string name="change_note">Изменить</string>
 </resources>
