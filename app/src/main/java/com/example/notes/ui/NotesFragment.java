@@ -82,7 +82,16 @@ public class NotesFragment extends Fragment {
     private void initList(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
         recyclerViewAdapter = new RecyclerViewAdapter(notesSource, this);
-        recyclerViewAdapter.setOnItemClickListener(position -> showNote(getNote(position)));
+        recyclerViewAdapter.setOnItemClickListener(position -> {
+            showNote(getNote(position));
+            publisher.subscribe(new Observer() {
+                @Override
+                public void updateNotes(Note note) {
+                    notesSource.updateNote(position, note);
+                    recyclerViewAdapter.notifyItemChanged(position);
+                }
+            });
+        });
         recyclerView.setAdapter(recyclerViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
         recyclerView.setLayoutManager(linearLayoutManager);
