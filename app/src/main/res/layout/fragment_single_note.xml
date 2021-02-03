@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/text_view_name"
+        android:id="@+id/edit_text_name"
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
@@ -23,12 +23,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/text_view_description"
+        android:id="@+id/edit_text_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_name" />
+        app:layout_constraintTop_toBottomOf="@id/edit_text_name" />
 
     <EditText
         android:id="@+id/edit_text_content"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_description" />
+        app:layout_constraintTop_toBottomOf="@id/edit_text_description" />
 
     <Button
         android:id="@+id/button_ok_single_note"

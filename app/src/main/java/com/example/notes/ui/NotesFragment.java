@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,12 +19,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notes.FragmentHandler;
+import com.example.notes.MainActivity;
 import com.example.notes.R;
 import com.example.notes.data.Note;
 import com.example.notes.data.NoteSource;
 import com.example.notes.data.NoteSourceImpl;
-
-import java.util.ArrayList;
+import com.example.notes.observe.Observer;
+import com.example.notes.observe.Publisher;
 
 public class NotesFragment extends Fragment {
 
@@ -34,6 +34,20 @@ public class NotesFragment extends Fragment {
     private NoteSource notesSource;
     private boolean isLandscape;
     private RecyclerViewAdapter recyclerViewAdapter;
+    private Publisher publisher;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        MainActivity activity = (MainActivity) context;
+        publisher = activity.getPublisher();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        publisher = null;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,30 +98,6 @@ public class NotesFragment extends Fragment {
         menu.findItem(R.id.change_note).setVisible(!isLandscape);
     }
 
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        int position = recyclerViewAdapter.getMenuPosition();
-        switch (item.getItemId()) {
-            case R.id.change_note:
-                return true;
-            case R.id.delete_note:
-                notesSource.deleteNote(position);
-                recyclerViewAdapter.notifyItemRemoved(position);
-                //для ландшафтной ориентации проверим размер списка.
-                if (isLandscape && notesSource.size() > 0) {
-                    //Если удалили позицию в конце списка, откроем по умолчанию предыдущую позицию
-                    //TODO Обработать открытие детально заметки при очистке списка.
-                    //Сейчас открывается последняя удаленная
-                    if (notesSource.size() <= position) {
-                        position--;
-                    }
-                    showNoteLand(notesSource.getNote(position));
-                }
-                return true;
-        }
-        return super.onContextItemSelected(item);
-    }
-
     private Note getNote(int position) {
         return notesSource.getNote(position);
     }
@@ -132,7 +122,12 @@ public class NotesFragment extends Fragment {
 
     //Покажем содержимое заметки для ландшафтного режима
     private void showNoteLand(Note currentNote) {
-        SingleNoteFragment detail = SingleNoteFragment.newInstance(currentNote);
+        SingleNoteFragment detail;
+        if (currentNote == null) {
+            detail = SingleNoteFragment.newInstance();
+        } else {
+            detail = SingleNoteFragment.newInstance(currentNote);
+        }
         FragmentHandler.replaceFragment(requireActivity(), detail, R.id.single_note, false);
     }
 
@@ -140,7 +135,12 @@ public class NotesFragment extends Fragment {
     private void showNotePort(Note currentNote) {
         Context context = getContext();
         if (context != null) {
-            SingleNoteFragment detail = SingleNoteFragment.newInstance(currentNote);
+            SingleNoteFragment detail;
+            if (currentNote == null) {
+                detail = SingleNoteFragment.newInstance();
+            } else {
+                detail = SingleNoteFragment.newInstance(currentNote);
+            }
             FragmentHandler.replaceFragment(requireActivity(), detail, R.id.notes, true);
         }
     }
@@ -169,7 +169,14 @@ public class NotesFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.add_note:
-                Toast.makeText(getContext(), "Add chosen", Toast.LENGTH_LONG).show();
+                showNote(null);
+                publisher.subscribe(new Observer() {
+                    @Override
+                    public void updateNotes(Note note) {
+                        notesSource.addNote(note);
+                        recyclerViewAdapter.notifyItemInserted(notesSource.size() - 1);
+                    }
+                });
                 return true;
             case R.id.clear_notes:
                 notesSource.clearNotes();
@@ -178,5 +185,29 @@ public class NotesFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int position = recyclerViewAdapter.getMenuPosition();
+        switch (item.getItemId()) {
+            case R.id.change_note:
+                return true;
+            case R.id.delete_note:
+                notesSource.deleteNote(position);
+                recyclerViewAdapter.notifyItemRemoved(position);
+                //для ландшафтной ориентации проверим размер списка.
+                if (isLandscape && notesSource.size() > 0) {
+                    //Если удалили позицию в конце списка, откроем по умолчанию предыдущую позицию
+                    //TODO Обработать открытие детально заметки при очистке списка.
+                    //Сейчас открывается последняя удаленная
+                    if (notesSource.size() <= position) {
+                        position--;
+                    }
+                    showNoteLand(notesSource.getNote(position));
+                }
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 }

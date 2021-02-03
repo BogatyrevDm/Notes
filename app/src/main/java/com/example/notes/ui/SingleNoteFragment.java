@@ -1,5 +1,6 @@
 package com.example.notes.ui;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,17 +19,38 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.notes.FragmentHandler;
+import com.example.notes.MainActivity;
 import com.example.notes.R;
 import com.example.notes.data.Note;
+import com.example.notes.observe.Publisher;
 
 public class SingleNoteFragment extends Fragment {
 
     static final String ARG_SINGLE_NOTE = "note";
-
+    private Publisher publisher;
     private Note note;
+    EditText etName;
+    TextView tvDate;
+    EditText etDescription;
+    EditText etContent;
+    Button buttonOk;
+    Button buttonCancel;
 
     public SingleNoteFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        MainActivity activity = (MainActivity) context;
+        publisher = activity.getPublisher();
+    }
+
+    @Override
+    public void onDetach() {
+        publisher = null;
+        super.onDetach();
     }
 
     public static SingleNoteFragment newInstance(Note note) {
@@ -35,6 +58,11 @@ public class SingleNoteFragment extends Fragment {
         Bundle args = new Bundle();
         args.putParcelable(ARG_SINGLE_NOTE, note);
         fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static SingleNoteFragment newInstance() {
+        SingleNoteFragment fragment = new SingleNoteFragment();
         return fragment;
     }
 
@@ -51,29 +79,65 @@ public class SingleNoteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_single_note, container, false);
-        TextView tvName = view.findViewById(R.id.text_view_name);
-        tvName.setText(note.getName());
-        TextView tvDate = view.findViewById(R.id.text_view_date);
-        tvDate.setText(note.getFormatedCreationDate());
+        setHasOptionsMenu(true);
+
+        initView(view);
+        if (note != null) {
+            populateView();
+        }
+        return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        publisher.unsubscribeAll();
+    }
+
+    private Note collectNote() {
+        String name = this.etName.getText().toString();
+        String description = this.etDescription.getText().toString();
+        Boolean isImportant = true;
+        String content = this.etContent.getText().toString();
+        return new Note(name, description, (long) 0.0, isImportant, content);
+    }
+
+    private void initView(View view) {
+        etName = view.findViewById(R.id.edit_text_name);
+        tvDate = view.findViewById(R.id.text_view_date);
+
+        etDescription = view.findViewById(R.id.edit_text_description);
+        etContent = view.findViewById(R.id.edit_text_content);
         tvDate.setOnClickListener(v -> {
             DataPickerFragment detail = DataPickerFragment.newInstance(note);
             FragmentActivity activity = requireActivity();
             FragmentHandler.replaceFragment(activity, detail, FragmentHandler.getIdFromOrientation(activity), true);
 
         });
-        Button buttonOk = view.findViewById(R.id.button_ok_single_note);
+
         //Пока оба листенера будут делать одно и тоже. Разветвлю логику,
         // когда буду реализовывать сохранение измененных заметок
-        buttonOk.setOnClickListener(v -> popBackStackIfNotLand());
-        Button buttonCancel = view.findViewById(R.id.button_cancel_single_note);
+        buttonOk = view.findViewById(R.id.button_ok_single_note);
+        buttonOk.setOnClickListener(v -> {
+                    note = collectNote();
+                    publisher.notifySingle(note);
+                    popBackStackIfNotLand();
+                }
+        );
+        buttonCancel = view.findViewById(R.id.button_cancel_single_note);
         buttonCancel.setOnClickListener(v -> popBackStackIfNotLand());
+    }
 
-        TextView tvDescription = view.findViewById(R.id.text_view_description);
-        tvDescription.setText(note.getDescription());
-        TextView tvContent = view.findViewById(R.id.edit_text_content);
-        tvContent.setText(note.getContent());
-        setHasOptionsMenu(true);
-        return view;
+    private void populateView() {
+        etName.setText(note.getName());
+        tvDate.setText(note.getFormatedCreationDate());
+        etDescription.setText(note.getDescription());
+        etContent.setText(note.getContent());
     }
 
     //Выкидываем активность из стека, когда ориентация портретная

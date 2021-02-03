@@ -13,12 +13,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.notes.observe.Publisher;
 import com.example.notes.ui.AboutFragment;
 import com.example.notes.ui.NotesFragment;
 import com.example.notes.ui.SettingsFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private Publisher publisher = new Publisher();
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -84,5 +86,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         return toolbar;
+    }
+    public Publisher getPublisher(){
+        return publisher;
     }
 }

@@ -19,7 +19,9 @@ public class Publisher {
     public void unsubscribe(Observer observer) {
         observers.remove(observer);
     }
-
+    public void unsubscribeAll() {
+        observers.clear();
+    }
     public void notifySingle(Note note) {
         for (Observer observer : observers) {
             observer.updateNotes(note);
