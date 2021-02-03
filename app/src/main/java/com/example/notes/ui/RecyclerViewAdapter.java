@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notes.R;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private NoteSource dataSource;
     private OnItemClickListener clickListener;
+    private final Fragment fragment;
 
     @NonNull
     @Override
@@ -25,8 +27,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ViewHolder(v);
     }
 
-    public RecyclerViewAdapter(NoteSource dataSource) {
+    public RecyclerViewAdapter(NoteSource dataSource, Fragment fragment) {
         this.dataSource = dataSource;
+        this.fragment = fragment;
+
     }
 
     public void setOnItemClickListener(OnItemClickListener clickListener) {
@@ -47,6 +51,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         void onItemClick(int position);
     }
 
+    void registerContextMenu(View view) {
+        if (fragment != null) {
+            fragment.registerForContextMenu(view);
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewName;
         private TextView textViewDate;
@@ -55,6 +65,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(itemView);
             textViewName = itemView.findViewById(R.id.note_name_text_view);
             textViewDate = itemView.findViewById(R.id.note_date_text_view);
+            registerContextMenu(itemView);
             itemView.setOnClickListener(v -> {
                 clickListener.onItemClick(getAdapterPosition());
             });

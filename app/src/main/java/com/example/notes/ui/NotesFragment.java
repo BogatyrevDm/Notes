@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,12 +66,30 @@ public class NotesFragment extends Fragment {
     //Инициализируем интерфейс
     private void initList(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(notesSource);
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(notesSource, this);
         recyclerViewAdapter.setOnItemClickListener(position -> showNote(getNote(position)));
         recyclerView.setAdapter(recyclerViewAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
+    }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater menuInflater = requireActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.menu_context, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.change_note:
+                return true;
+            case R.id.delete_note:
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     private Note getNote(int position) {
