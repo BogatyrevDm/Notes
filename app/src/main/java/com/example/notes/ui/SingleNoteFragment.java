@@ -1,8 +1,10 @@
 package com.example.notes.ui;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,11 +27,14 @@ import com.example.notes.R;
 import com.example.notes.data.Note;
 import com.example.notes.observe.Publisher;
 
+import java.util.Calendar;
+
 public class SingleNoteFragment extends Fragment {
 
     static final String ARG_SINGLE_NOTE = "note";
     private Publisher publisher;
     private Note note;
+    private Calendar creationDate = Calendar.getInstance();
     EditText etName;
     TextView tvDate;
     EditText etDescription;
@@ -53,6 +59,11 @@ public class SingleNoteFragment extends Fragment {
         super.onDetach();
     }
 
+    DatePickerDialog.OnDateSetListener onDateSetListener = (view, year, month, dayOfMonth) -> {
+        creationDate.set(year, month, dayOfMonth);
+        setDateTextView(creationDate.getTimeInMillis());
+    };
+
     public static SingleNoteFragment newInstance(Note note) {
         SingleNoteFragment fragment = new SingleNoteFragment();
         Bundle args = new Bundle();
@@ -71,6 +82,7 @@ public class SingleNoteFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             note = getArguments().getParcelable(ARG_SINGLE_NOTE);
+            creationDate.setTimeInMillis(note.getCreationDateUnixTime());
         }
     }
 
@@ -104,7 +116,7 @@ public class SingleNoteFragment extends Fragment {
         String description = this.etDescription.getText().toString();
         Boolean isImportant = true;
         String content = this.etContent.getText().toString();
-        return new Note(name, description, (long) 0.0, isImportant, content);
+        return new Note(name, description, creationDate.getTimeInMillis(), isImportant, content);
     }
 
     private void initView(View view) {
@@ -114,10 +126,8 @@ public class SingleNoteFragment extends Fragment {
         etDescription = view.findViewById(R.id.edit_text_description);
         etContent = view.findViewById(R.id.edit_text_content);
         tvDate.setOnClickListener(v -> {
-            DataPickerFragment detail = DataPickerFragment.newInstance(note);
-            FragmentActivity activity = requireActivity();
-            FragmentHandler.replaceFragment(activity, detail, FragmentHandler.getIdFromOrientation(activity), true);
-
+            new DatePickerDialog(requireActivity(), onDateSetListener, creationDate.get(Calendar.YEAR),
+                    creationDate.get(Calendar.MONTH), creationDate.get(Calendar.DAY_OF_MONTH)).show();
         });
 
         //Пока оба листенера будут делать одно и тоже. Разветвлю логику,
@@ -135,9 +145,13 @@ public class SingleNoteFragment extends Fragment {
 
     private void populateView() {
         etName.setText(note.getName());
-        tvDate.setText(note.getFormatedCreationDate());
+        setDateTextView(note.getCreationDateUnixTime());
         etDescription.setText(note.getDescription());
         etContent.setText(note.getContent());
+    }
+
+    private void setDateTextView(long dateUT) {
+        tvDate.setText(DateUtils.formatDateTime(null, dateUT, DateUtils.FORMAT_SHOW_DATE));
     }
 
     //Выкидываем активность из стека, когда ориентация портретная

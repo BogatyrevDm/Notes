@@ -2,6 +2,7 @@ package com.example.notes.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.format.DateUtils;
 
 import java.util.Calendar;
 
@@ -65,9 +66,7 @@ public class Note implements Parcelable {
     }
 
     public String getFormatedCreationDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(((long) getCreationDateUnixTime()));
-        return String.format("%d/%d/%d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        return DateUtils.formatDateTime(null, getCreationDateUnixTime(), DateUtils.FORMAT_SHOW_DATE);
     }
 
     public boolean isImportant() {
