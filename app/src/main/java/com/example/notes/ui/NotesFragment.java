@@ -84,10 +84,12 @@ public class NotesFragment extends Fragment {
         recyclerViewAdapter = new RecyclerViewAdapter(notesSource, this);
         recyclerViewAdapter.setOnItemClickListener(position -> {
             showNote(getNote(position));
+            currentNoteInt = position;
             publisher.subscribe(new Observer() {
                 @Override
                 public void updateNotes(Note note) {
                     notesSource.updateNote(position, note);
+                    currentNoteInt = position;
                     recyclerViewAdapter.notifyItemChanged(position);
                 }
             });
@@ -135,7 +137,7 @@ public class NotesFragment extends Fragment {
         } else {
             detail = SingleNoteFragment.newInstance(currentNote);
         }
-        FragmentHandler.replaceFragment(requireActivity(), detail, R.id.single_note, false);
+        FragmentHandler.replaceFragment(requireActivity(), detail, R.id.single_note, false,false,false);
     }
 
     //Покажем содержимое заметки для портретного режима
@@ -148,14 +150,14 @@ public class NotesFragment extends Fragment {
             } else {
                 detail = SingleNoteFragment.newInstance(currentNote);
             }
-            FragmentHandler.replaceFragment(requireActivity(), detail, R.id.notes, true);
+            FragmentHandler.replaceFragment(requireActivity(), detail, R.id.notes, true,false, false);
         }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putInt(CURRENT_NOTE, currentNoteInt);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -181,12 +183,14 @@ public class NotesFragment extends Fragment {
                     @Override
                     public void updateNotes(Note note) {
                         notesSource.addNote(note);
-                        recyclerViewAdapter.notifyItemInserted(notesSource.size() - 1);
+                        currentNoteInt = notesSource.size() - 1;
+                        recyclerViewAdapter.notifyItemInserted(currentNoteInt);
                     }
                 });
                 return true;
             case R.id.clear_notes:
                 notesSource.clearNotes();
+                currentNoteInt = 0;
                 recyclerViewAdapter.notifyDataSetChanged();
                 return true;
         }

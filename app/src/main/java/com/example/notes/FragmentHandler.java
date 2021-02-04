@@ -7,11 +7,24 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.notes.ui.SingleNoteFragment;
+
 public abstract class FragmentHandler {
-    public static void replaceFragment(FragmentActivity activity, Fragment fragment, int fragmentIdToReplace, boolean addToBackStack) {
+    public static void replaceFragment(FragmentActivity activity, Fragment fragment, int fragmentIdToReplace, boolean addToBackStack, boolean popUpBeforeReplace, boolean add) {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(fragmentIdToReplace, fragment);
+        if (popUpBeforeReplace){
+            Fragment oldFragment = fragmentManager.findFragmentById(fragmentIdToReplace);
+            if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && oldFragment instanceof SingleNoteFragment){
+                fragmentManager.popBackStack();
+            }
+        }
+        if (add){
+           fragmentTransaction.add(fragment,"Some fragment");
+        }else {
+            fragmentTransaction.replace(fragmentIdToReplace, fragment);
+        }
+
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         if (addToBackStack){
             fragmentTransaction.addToBackStack(null);
