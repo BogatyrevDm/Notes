@@ -13,23 +13,24 @@ public abstract class FragmentHandler {
     public static void replaceFragment(FragmentActivity activity, Fragment fragment, int fragmentIdToReplace, boolean addToBackStack, boolean popUpBeforeReplace, boolean add) {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if (popUpBeforeReplace){
+        Boolean isLandscape = false;
+        if (popUpBeforeReplace) {
             Fragment oldFragment = fragmentManager.findFragmentById(fragmentIdToReplace);
-            if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && oldFragment instanceof SingleNoteFragment){
-                fragmentManager.popBackStack();
+            if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && oldFragment instanceof SingleNoteFragment) {
+                isLandscape = true;
             }
         }
-        if (add){
-           fragmentTransaction.add(fragment,"Some fragment");
-        }else {
+        if (isLandscape) {
+            fragmentManager.popBackStack();
+        } else {
             fragmentTransaction.replace(fragmentIdToReplace, fragment);
-        }
 
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        if (addToBackStack){
-            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            if (addToBackStack) {
+                fragmentTransaction.addToBackStack(null);
+            }
+            fragmentTransaction.commitAllowingStateLoss();
         }
-        fragmentTransaction.commitAllowingStateLoss();
     }
 
     public static int getIdFromOrientation(FragmentActivity activity) {
@@ -40,6 +41,7 @@ public abstract class FragmentHandler {
             return R.id.notes;
         }
     }
+
     public static void popBackStack(FragmentActivity activity) {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         fragmentManager.popBackStack();

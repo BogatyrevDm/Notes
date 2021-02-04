@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+
         FragmentHandler.replaceFragment(MainActivity.this, new NotesFragment(), R.id.notes, false, true, false);
     }
 
@@ -93,4 +94,6 @@ public class MainActivity extends AppCompatActivity {
     public Publisher getPublisher() {
         return publisher;
     }
+
+
 }

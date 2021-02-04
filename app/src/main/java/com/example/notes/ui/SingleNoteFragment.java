@@ -108,7 +108,7 @@ public class SingleNoteFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        publisher.unsubscribeAll();
+        //publisher.unsubscribeAll();
     }
 
     private Note collectNote() {

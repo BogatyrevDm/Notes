@@ -39,7 +39,7 @@ public class NotesFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity) context;
+        MainActivity activity = (MainActivity) getContext();
         publisher = activity.getPublisher();
     }
 
@@ -64,6 +64,7 @@ public class NotesFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         //Установим признак ландшафтной ориентации
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
