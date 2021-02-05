@@ -49,7 +49,7 @@ public class SingleNoteFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity) context;
+        MainActivity activity = (MainActivity) requireContext();
         publisher = activity.getPublisher();
     }
 
