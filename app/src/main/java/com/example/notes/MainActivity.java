@@ -13,9 +13,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.notes.observe.Publisher;
+import com.example.notes.ui.AboutFragment;
+import com.example.notes.ui.NotesFragment;
+import com.example.notes.ui.SettingsFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private Publisher publisher = new Publisher();
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -41,8 +47,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        FragmentHandler.replaceFragment(MainActivity.this, new NotesFragment(), R.id.notes, true);
+
+        FragmentHandler.replaceFragment(MainActivity.this, new NotesFragment(), R.id.notes, false, true, false);
     }
+
 
     private void initDrawer(Toolbar toolbar) {
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -58,11 +66,11 @@ public class MainActivity extends AppCompatActivity {
                 int itemId = item.getItemId();
                 switch (itemId) {
                     case R.id.action_settings:
-                        FragmentHandler.replaceFragment(MainActivity.this, new SettingsFragment(), FragmentHandler.getIdFromOrientation(MainActivity.this), true);
+                        FragmentHandler.replaceFragment(MainActivity.this, new SettingsFragment(), FragmentHandler.getIdFromOrientation(MainActivity.this), true, false, false);
                         drawer.closeDrawer(GravityCompat.START);
                         return true;
                     case R.id.action_about:
-                        FragmentHandler.replaceFragment(MainActivity.this, new AboutFragment(), FragmentHandler.getIdFromOrientation(MainActivity.this), true);
+                        FragmentHandler.replaceFragment(MainActivity.this, new AboutFragment(), FragmentHandler.getIdFromOrientation(MainActivity.this), true, false, false);
                         drawer.closeDrawer(GravityCompat.START);
                         return true;
                 }
@@ -82,4 +90,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         return toolbar;
     }
+
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
+
 }

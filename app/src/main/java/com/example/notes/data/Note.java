@@ -1,11 +1,12 @@
-package com.example.notes;
+package com.example.notes.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.format.DateUtils;
 
 import java.util.Calendar;
 
-class Note implements Parcelable {
+public class Note implements Parcelable {
     private String name; //Имя заметки
     private String description; //Описание
     private long creationDateUnixTime; //Дата создания Unix time
@@ -65,9 +66,7 @@ class Note implements Parcelable {
     }
 
     public String getFormatedCreationDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(((long) getCreationDateUnixTime()));
-        return String.format("%d/%d/%d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        return DateUtils.formatDateTime(null, getCreationDateUnixTime(), DateUtils.FORMAT_SHOW_DATE);
     }
 
     public boolean isImportant() {

@@ -7,7 +7,6 @@
     <string name="content">Content</string>
     <string name="search">Search</string>
     <string name="add_note">Add</string>
-    <string name="sort_notes">Sort</string>
     <string name="send_note">Send</string>
     <string name="add_photo">Add photo</string>
     <string name="add_link">Add link</string>
@@ -19,4 +18,7 @@
     <string name="settings_text">Some settings</string>
     <string name="about_text">This notebook is the property of the Half-Blood Prince</string>
     <string name="user_name">Some user name</string>
+    <string name="delete_note">Delete</string>
+    <string name="change_note">Change</string>
+    <string name="clear_notes">Clear</string>
 </resources>
