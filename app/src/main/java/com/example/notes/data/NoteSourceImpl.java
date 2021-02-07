@@ -15,10 +15,13 @@ public class NoteSourceImpl implements NoteSource {
         this.resources = resources;
     }
 
-    public NoteSourceImpl init() {
+    public NoteSource init(NoteSourceResponse noteSourceResponse) {
         String[] notesArray = resources.getStringArray(R.array.names);
         for (int i = 0; i < notesArray.length; i++) {
             notes.add(createNewNote(i));
+        }
+        if (noteSourceResponse != null){
+            noteSourceResponse.initialized(this);
         }
         return this;
     }
