@@ -116,7 +116,13 @@ public class SingleNoteFragment extends Fragment {
         String description = this.etDescription.getText().toString();
         Boolean isImportant = true;
         String content = this.etContent.getText().toString();
-        return new Note(name, description, creationDate.getTimeInMillis(), isImportant, content);
+        if (note != null){
+            Note answer = new Note(name, description, creationDate.getTimeInMillis(), isImportant, content);
+            answer.setId(note.getId());
+            return answer;
+        }else {
+            return new Note(name, description, creationDate.getTimeInMillis(), isImportant, content);
+        }
     }
 
     private void initView(View view) {
