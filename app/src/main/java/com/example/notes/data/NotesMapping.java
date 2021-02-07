@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NotesMapping {
-    private static class Fields {
+    public static class Fields {
         public final static String NAME = "name";
         public final static String DESCRIPTION = "description";
         public final static String CREATION_DATE = "creationDate";
