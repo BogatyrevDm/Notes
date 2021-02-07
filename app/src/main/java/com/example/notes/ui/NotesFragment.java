@@ -85,19 +85,6 @@ public class NotesFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-//        //Установим признак ландшафтной ориентации
-//        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-//
-//        if (savedInstanceState != null) {
-//            currentNoteInt = savedInstanceState.getInt(CURRENT_NOTE);
-//        } else {
-//            currentNoteInt = 0;
-//        }
-//
-//        if (isLandscape) {
-//            showNoteLand(getNote(currentNoteInt));
-//        }
     }
 
     //Инициализируем интерфейс
