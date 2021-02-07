@@ -54,9 +54,8 @@ public class NotesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
-        setHasOptionsMenu(true);
         initList(view);
-
+        setHasOptionsMenu(true);
         notesSource = new NoteSourceFirebaseImpl().init(notesData -> {
             recyclerViewAdapter.notifyDataSetChanged();
             //Установим признак ландшафтной ориентации
@@ -67,7 +66,6 @@ public class NotesFragment extends Fragment {
             } else {
                 currentNoteInt = 0;
             }
-
             if (isLandscape) {
                 showNoteLand(getNote(currentNoteInt));
             }
@@ -76,7 +74,6 @@ public class NotesFragment extends Fragment {
 
         return view;
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -85,6 +82,7 @@ public class NotesFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
     }
 
     //Инициализируем интерфейс
@@ -98,8 +96,10 @@ public class NotesFragment extends Fragment {
                 @Override
                 public void updateNotes(Note note) {
                     notesSource.updateNote(position, note, () -> {
-                        currentNoteInt = position;
-                        recyclerViewAdapter.notifyItemChanged(position);
+                        if (isLandscape){
+                            currentNoteInt = position;
+                            recyclerViewAdapter.notifyItemChanged(position);
+                        }
                     });
 
                 }
@@ -179,11 +179,12 @@ public class NotesFragment extends Fragment {
                         notesSource.addNote(note, new NoteSourceResponseAdded() {
                             @Override
                             public void added() {
-                                currentNoteInt = notesSource.size() - 1;
-                                recyclerViewAdapter.notifyItemInserted(currentNoteInt);
+                                if (isLandscape) {
+                                    currentNoteInt = notesSource.size() - 1;
+                                    recyclerViewAdapter.notifyItemInserted(currentNoteInt);
+                                }
                             }
                         });
-
                     }
                 });
                 return true;

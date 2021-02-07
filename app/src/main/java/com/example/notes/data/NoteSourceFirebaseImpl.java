@@ -83,7 +83,6 @@ public class NoteSourceFirebaseImpl implements NoteSource {
             notes.set(position, note);
             noteSourceResponse.changed();
         });
-
     }
 
     @Override
