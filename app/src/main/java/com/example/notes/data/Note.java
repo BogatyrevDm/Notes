@@ -70,11 +70,11 @@ public class Note implements Parcelable {
         return DateUtils.formatDateTime(null, getCreationDateUnixTime(), DateUtils.FORMAT_SHOW_DATE);
     }
 
-    public boolean isImportant() {
+    public boolean getIsImportant() {
         return isImportant;
     }
 
-    public void setImportant(boolean important) {
+    public void setIsImportant(boolean important) {
         isImportant = important;
     }
 
