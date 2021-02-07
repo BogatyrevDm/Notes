@@ -16,7 +16,7 @@ import com.example.notes.data.NoteSource;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private NoteSource dataSource;
     private OnItemClickListener clickListener;
-    private final Fragment fragment;
+    private Fragment fragment;
     private int menuPosition;
 
     @NonNull
@@ -30,10 +30,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return menuPosition;
     }
 
-    public RecyclerViewAdapter(NoteSource dataSource, Fragment fragment) {
-        this.dataSource = dataSource;
+    public RecyclerViewAdapter(Fragment fragment) {
         this.fragment = fragment;
+    }
 
+    public void setDataSource(NoteSource noteSource) {
+        this.dataSource = noteSource;
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickListener(OnItemClickListener clickListener) {
@@ -55,7 +58,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewName;
         private TextView textViewDate;
@@ -74,6 +76,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             textViewName.setText(note.getName());
             textViewDate.setText(note.getFormatedCreationDate());
         }
+
         private void registerContextMenu(View view) {
             if (fragment != null) {
                 view.setOnLongClickListener(v -> {
