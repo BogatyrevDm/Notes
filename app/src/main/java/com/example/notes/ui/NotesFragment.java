@@ -54,8 +54,8 @@ public class NotesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
-        initList(view);
         setHasOptionsMenu(true);
+        initList(view);
         notesSource = new NoteSourceFirebaseImpl().init(notesData -> {
             recyclerViewAdapter.notifyDataSetChanged();
             //Установим признак ландшафтной ориентации
