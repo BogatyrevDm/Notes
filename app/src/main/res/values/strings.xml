@@ -21,4 +21,6 @@
     <string name="delete_note">Delete</string>
     <string name="change_note">Change</string>
     <string name="clear_notes">Clear</string>
+    <string name="sign_out">Sign out</string>
+    <string name="continue_text">Continue</string>
 </resources>
