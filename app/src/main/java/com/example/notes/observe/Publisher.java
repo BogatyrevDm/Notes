@@ -26,7 +26,13 @@ public class Publisher {
     }
 
     public void notifySingle(Note note) {
-        for (Observer observer : observers) {
+//        for (Observer observer : observers) {
+//            observer.updateNotes(note);
+//            unsubscribe(observer);
+//        }
+        int observersQuantity = observers.size() - 1;
+        for (int i = observersQuantity; i >= 0; i--) {
+            Observer observer = observers.get(i);
             observer.updateNotes(note);
             unsubscribe(observer);
         }

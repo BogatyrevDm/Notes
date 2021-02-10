@@ -17,10 +17,21 @@ import com.example.notes.observe.Publisher;
 import com.example.notes.ui.AboutFragment;
 import com.example.notes.ui.NotesFragment;
 import com.example.notes.ui.SettingsFragment;
+import com.example.notes.ui.StartFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String AUTH_STATE = "authorized";
     private Publisher publisher = new Publisher();
+    private boolean isAuthorized;
+
+    public boolean isAuthorized() {
+        return isAuthorized;
+    }
+
+    public void setAuthorized(boolean authorized) {
+        isAuthorized = authorized;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -47,10 +58,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-
-        FragmentHandler.replaceFragment(MainActivity.this, new NotesFragment(), R.id.notes, false, true, false);
+        if (savedInstanceState != null) {
+            setAuthorized(savedInstanceState.getBoolean(AUTH_STATE));
+        } else {
+            setAuthorized(false);
+        }
+        if (isAuthorized()) {
+            FragmentHandler.replaceFragment(MainActivity.this, new NotesFragment(), R.id.notes, false, true, false);
+        } else {
+            FragmentHandler.replaceFragment(MainActivity.this, StartFragment.newInstance(), R.id.notes, false, false, false);
+        }
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(AUTH_STATE, isAuthorized());
+    }
 
     private void initDrawer(Toolbar toolbar) {
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);

@@ -1,15 +1,16 @@
 package com.example.notes.data;
 
 public interface NoteSource {
+    NoteSource init(NoteSourceResponse noteSourceResponse);
     Note getNote(int position);
 
     int size();
 
-    void addNote(Note note);
+    void addNote(Note note, NoteSourceResponseAdded noteSourceResponse);
 
-    void updateNote(int position, Note note);
+    void updateNote(int position, Note note, NoteSourceResponseChanged noteSourceResponse);
 
-    void deleteNote(int position);
+    void deleteNote(int position, NoteSourceResponseDelete noteSourceResponse);
 
-    void clearNotes();
+    void clearNotes(NoteSourceResponseDelete noteSourceResponse);
 }

@@ -2,7 +2,6 @@ package com.example.notes.ui;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -23,7 +22,9 @@ import com.example.notes.MainActivity;
 import com.example.notes.R;
 import com.example.notes.data.Note;
 import com.example.notes.data.NoteSource;
-import com.example.notes.data.NoteSourceImpl;
+import com.example.notes.data.NoteSourceFirebaseImpl;
+import com.example.notes.data.NoteSourceResponseAdded;
+import com.example.notes.data.NoteSourceResponseDelete;
 import com.example.notes.observe.Observer;
 import com.example.notes.observe.Publisher;
 
@@ -39,7 +40,7 @@ public class NotesFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity) getContext();
+        MainActivity activity = (MainActivity) requireContext();
         publisher = activity.getPublisher();
     }
 
@@ -50,48 +51,57 @@ public class NotesFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        notesSource = new NoteSourceImpl(getResources()).init();
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_notes, container, false);
+        setHasOptionsMenu(true);
+        initList(view);
+        notesSource = new NoteSourceFirebaseImpl().init(notesData -> {
+            recyclerViewAdapter.notifyDataSetChanged();
+            //Установим признак ландшафтной ориентации
+            isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
+            if (savedInstanceState != null) {
+                currentNoteInt = savedInstanceState.getInt(CURRENT_NOTE);
+            } else {
+                currentNoteInt = 0;
+            }
+            if (isLandscape) {
+                showNoteLand(getNote(currentNoteInt));
+            }
+        });
+        recyclerViewAdapter.setDataSource(notesSource);
+
+        return view;
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initList(view);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //Установим признак ландшафтной ориентации
-        isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-
-        if (savedInstanceState != null) {
-            currentNoteInt = savedInstanceState.getInt(CURRENT_NOTE);
-        } else {
-            currentNoteInt = 0;
-        }
-
-        if (isLandscape) {
-            showNoteLand(getNote(currentNoteInt));
-        }
     }
 
     //Инициализируем интерфейс
     private void initList(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        recyclerViewAdapter = new RecyclerViewAdapter(notesSource, this);
+        recyclerViewAdapter = new RecyclerViewAdapter(this);
         recyclerViewAdapter.setOnItemClickListener(position -> {
             showNote(getNote(position));
             currentNoteInt = position;
             publisher.subscribe(new Observer() {
                 @Override
                 public void updateNotes(Note note) {
-                    notesSource.updateNote(position, note);
-                    currentNoteInt = position;
-                    recyclerViewAdapter.notifyItemChanged(position);
+                    notesSource.updateNote(position, note, () -> {
+                        if (isLandscape){
+                            currentNoteInt = position;
+                            recyclerViewAdapter.notifyItemChanged(position);
+                        }
+                    });
+
                 }
             });
         });
@@ -112,15 +122,6 @@ public class NotesFragment extends Fragment {
         return notesSource.getNote(position);
     }
 
-    private Note createNewNote(int index) {
-        Resources res = getResources();
-        int isImportantInt = Integer.parseInt(res.getStringArray(R.array.importances)[index]);
-        Boolean isImportant = isImportantInt == 1;
-        Note note = new Note(res.getStringArray(R.array.names)[index],
-                res.getStringArray(R.array.descriptions)[index], Long.parseLong(res.getStringArray(R.array.datesUT)[index]), isImportant, res.getStringArray(R.array.contents)[index]);
-        return note;
-    }
-
     //Покажем содержимое заметки
     private void showNote(Note currentNote) {
         if (isLandscape) {
@@ -138,7 +139,7 @@ public class NotesFragment extends Fragment {
         } else {
             detail = SingleNoteFragment.newInstance(currentNote);
         }
-        FragmentHandler.replaceFragment(requireActivity(), detail, R.id.single_note, false,false,false);
+        FragmentHandler.replaceFragment(requireActivity(), detail, R.id.single_note, false, false, false);
     }
 
     //Покажем содержимое заметки для портретного режима
@@ -151,7 +152,7 @@ public class NotesFragment extends Fragment {
             } else {
                 detail = SingleNoteFragment.newInstance(currentNote);
             }
-            FragmentHandler.replaceFragment(requireActivity(), detail, R.id.notes, true,false, false);
+            FragmentHandler.replaceFragment(requireActivity(), detail, R.id.notes, true, false, false);
         }
     }
 
@@ -159,14 +160,6 @@ public class NotesFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(CURRENT_NOTE, currentNoteInt);
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notes, container, false);
-        setHasOptionsMenu(true);
-        return view;
     }
 
     @Override
@@ -183,16 +176,27 @@ public class NotesFragment extends Fragment {
                 publisher.subscribe(new Observer() {
                     @Override
                     public void updateNotes(Note note) {
-                        notesSource.addNote(note);
-                        currentNoteInt = notesSource.size() - 1;
-                        recyclerViewAdapter.notifyItemInserted(currentNoteInt);
+                        notesSource.addNote(note, new NoteSourceResponseAdded() {
+                            @Override
+                            public void added() {
+                                if (isLandscape) {
+                                    currentNoteInt = notesSource.size() - 1;
+                                    recyclerViewAdapter.notifyItemInserted(currentNoteInt);
+                                }
+                            }
+                        });
                     }
                 });
                 return true;
             case R.id.clear_notes:
-                notesSource.clearNotes();
-                currentNoteInt = 0;
-                recyclerViewAdapter.notifyDataSetChanged();
+                notesSource.clearNotes(new NoteSourceResponseDelete() {
+                    @Override
+                    public void deleted() {
+                        currentNoteInt = 0;
+                        recyclerViewAdapter.notifyDataSetChanged();
+                    }
+                });
+
                 return true;
         }
 
@@ -204,8 +208,14 @@ public class NotesFragment extends Fragment {
         int position = recyclerViewAdapter.getMenuPosition();
         switch (item.getItemId()) {
             case R.id.delete_note:
-                notesSource.deleteNote(position);
-                recyclerViewAdapter.notifyItemRemoved(position);
+                final int positionFi = position;
+                notesSource.deleteNote(position, new NoteSourceResponseDelete() {
+                    @Override
+                    public void deleted() {
+                        recyclerViewAdapter.notifyItemRemoved(positionFi);
+                    }
+                });
+
                 //для ландшафтной ориентации проверим размер списка.
                 if (isLandscape && notesSource.size() > 0) {
                     //Если удалили позицию в конце списка, откроем по умолчанию предыдущую позицию

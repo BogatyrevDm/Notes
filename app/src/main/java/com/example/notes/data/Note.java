@@ -7,6 +7,7 @@ import android.text.format.DateUtils;
 import java.util.Calendar;
 
 public class Note implements Parcelable {
+    private String id; //ID заметки
     private String name; //Имя заметки
     private String description; //Описание
     private long creationDateUnixTime; //Дата создания Unix time
@@ -69,11 +70,11 @@ public class Note implements Parcelable {
         return DateUtils.formatDateTime(null, getCreationDateUnixTime(), DateUtils.FORMAT_SHOW_DATE);
     }
 
-    public boolean isImportant() {
+    public boolean getIsImportant() {
         return isImportant;
     }
 
-    public void setImportant(boolean important) {
+    public void setIsImportant(boolean important) {
         isImportant = important;
     }
 
@@ -85,6 +86,13 @@ public class Note implements Parcelable {
         this.content = content;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     @Override
     public int describeContents() {
