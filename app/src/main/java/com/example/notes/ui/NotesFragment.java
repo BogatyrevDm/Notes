@@ -23,7 +23,6 @@ import com.example.notes.R;
 import com.example.notes.data.Note;
 import com.example.notes.data.NoteSource;
 import com.example.notes.data.NoteSourceFirebaseImpl;
-import com.example.notes.data.NoteSourceResponseAdded;
 import com.example.notes.data.NoteSourceResponseDelete;
 import com.example.notes.observe.Observer;
 import com.example.notes.observe.Publisher;
@@ -175,23 +174,23 @@ public class NotesFragment extends Fragment {
         switch (id) {
             case R.id.add_note:
                 showNote(null);
-                publisher.subscribe(new Observer() {
-                    @Override
-                    public void updateNotes(Note note) {
-                        notesSource.addNote(note, () -> {
-                            if (isLandscape) {
-                                currentNoteInt = notesSource.size() - 1;
-                                recyclerViewAdapter.notifyItemInserted(currentNoteInt);
-                            }
-                        });
+                publisher.subscribe(note -> notesSource.addNote(note, () -> {
+                    if (isLandscape) {
+                        currentNoteInt = notesSource.size() - 1;
+                        recyclerViewAdapter.notifyItemInserted(currentNoteInt);
                     }
-                });
+                }));
                 return true;
             case R.id.clear_notes:
-                notesSource.clearNotes(() -> {
-                    currentNoteInt = 0;
-                    recyclerViewAdapter.notifyDataSetChanged();
-                });
+                DialogFragment dialogFragment = DialogFragment.newInstance(getString(R.string.clear_notes_text));
+                dialogFragment.setOnDialogListener(() -> {
+                            notesSource.clearNotes(() -> {
+                                currentNoteInt = 0;
+                                recyclerViewAdapter.notifyDataSetChanged();
+                            });
+                        }
+                );
+                dialogFragment.show(requireFragmentManager(), DIALOG_TAG);
 
                 return true;
         }
@@ -228,8 +227,6 @@ public class NotesFragment extends Fragment {
                     }
                 });
                 dialogFragment.show(requireFragmentManager(), DIALOG_TAG);
-
-
                 return true;
         }
         return super.onContextItemSelected(item);
