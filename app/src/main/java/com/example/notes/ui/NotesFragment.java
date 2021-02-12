@@ -31,6 +31,7 @@ import com.example.notes.observe.Publisher;
 public class NotesFragment extends Fragment {
 
     private static final String CURRENT_NOTE = "CurrentNote";
+    private static final String DIALOG_TAG = "dialog";
     private int currentNoteInt = 0;
     private NoteSource notesSource;
     private boolean isLandscape;
@@ -74,6 +75,7 @@ public class NotesFragment extends Fragment {
 
         return view;
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -96,7 +98,7 @@ public class NotesFragment extends Fragment {
                 @Override
                 public void updateNotes(Note note) {
                     notesSource.updateNote(position, note, () -> {
-                        if (isLandscape){
+                        if (isLandscape) {
                             currentNoteInt = position;
                             recyclerViewAdapter.notifyItemChanged(position);
                         }
@@ -176,25 +178,19 @@ public class NotesFragment extends Fragment {
                 publisher.subscribe(new Observer() {
                     @Override
                     public void updateNotes(Note note) {
-                        notesSource.addNote(note, new NoteSourceResponseAdded() {
-                            @Override
-                            public void added() {
-                                if (isLandscape) {
-                                    currentNoteInt = notesSource.size() - 1;
-                                    recyclerViewAdapter.notifyItemInserted(currentNoteInt);
-                                }
+                        notesSource.addNote(note, () -> {
+                            if (isLandscape) {
+                                currentNoteInt = notesSource.size() - 1;
+                                recyclerViewAdapter.notifyItemInserted(currentNoteInt);
                             }
                         });
                     }
                 });
                 return true;
             case R.id.clear_notes:
-                notesSource.clearNotes(new NoteSourceResponseDelete() {
-                    @Override
-                    public void deleted() {
-                        currentNoteInt = 0;
-                        recyclerViewAdapter.notifyDataSetChanged();
-                    }
+                notesSource.clearNotes(() -> {
+                    currentNoteInt = 0;
+                    recyclerViewAdapter.notifyDataSetChanged();
                 });
 
                 return true;
@@ -209,23 +205,31 @@ public class NotesFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.delete_note:
                 final int positionFi = position;
-                notesSource.deleteNote(position, new NoteSourceResponseDelete() {
-                    @Override
-                    public void deleted() {
-                        recyclerViewAdapter.notifyItemRemoved(positionFi);
+                DialogFragment dialogFragment = DialogFragment.newInstance(getString(R.string.delete_note_text));
+                dialogFragment.setOnDialogListener(() -> {
+                    notesSource.deleteNote(positionFi, new NoteSourceResponseDelete() {
+                        @Override
+                        public void deleted() {
+                            recyclerViewAdapter.notifyItemRemoved(positionFi);
+                        }
+                    });
+
+                    //для ландшафтной ориентации проверим размер списка.
+                    if (isLandscape && notesSource.size() > 0) {
+                        //Если удалили позицию в конце списка, откроем по умолчанию предыдущую позицию
+                        //TODO Обработать открытие детально заметки при очистке списка.
+                        //Сейчас открывается последняя удаленная
+
+                        if (notesSource.size() <= positionFi) {
+                            showNoteLand(notesSource.getNote(positionFi - 1));
+                        } else {
+                            showNoteLand(notesSource.getNote(positionFi));
+                        }
                     }
                 });
+                dialogFragment.show(requireFragmentManager(), DIALOG_TAG);
 
-                //для ландшафтной ориентации проверим размер списка.
-                if (isLandscape && notesSource.size() > 0) {
-                    //Если удалили позицию в конце списка, откроем по умолчанию предыдущую позицию
-                    //TODO Обработать открытие детально заметки при очистке списка.
-                    //Сейчас открывается последняя удаленная
-                    if (notesSource.size() <= position) {
-                        position--;
-                    }
-                    showNoteLand(notesSource.getNote(position));
-                }
+
                 return true;
         }
         return super.onContextItemSelected(item);
