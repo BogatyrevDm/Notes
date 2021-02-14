@@ -6,4 +6,5 @@
     <dimen name="about_textsize">24sp</dimen>
     <dimen name="padding_top">5dp</dimen>
     <dimen name="user_name_size">30sp</dimen>
+    <dimen name="button_margin">5dp</dimen>
 </resources>

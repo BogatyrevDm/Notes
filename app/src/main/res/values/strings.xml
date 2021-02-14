@@ -23,4 +23,6 @@
     <string name="clear_notes">Clear</string>
     <string name="sign_out">Sign out</string>
     <string name="continue_text">Continue</string>
+    <string name="delete_note_text">Delete note?</string>
+    <string name="clear_notes_text">Clear notes?</string>
 </resources>
